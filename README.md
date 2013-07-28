@@ -1,7 +1,11 @@
-Board Progress for Trello (Chrome Extension)
-=========================
+Board Progress for Trello
+=================
 
-Get the percentage of cards and their checklists that are "done".
+Chrome extension for Trello to get the percentage of cards and their checklists that are "done".
 
+
+
+Chrome Install
+=================
 
 Navigate to chrome://extensions and click "Load unpacked extension". Visit http://trello.com!
