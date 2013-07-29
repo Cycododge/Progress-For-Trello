@@ -3,40 +3,23 @@ AUTHOR
 	Cycododge
 
 UPDATED
-	7/27/2013 v1.0.0
+	7/28/2013 v1.0.0
 */
-chrome.extension.sendMessage({}, function(response) {
-	var readyStateCheckInterval = setInterval(function() {
-	if (document.readyState === "complete") {
-		clearInterval(readyStateCheckInterval);
-		// ----------------------------------------------------------
-		// This part of the script triggers when page is done loading
-		startScript();
-		// ----------------------------------------------------------
-	}
-	}, 10);
-});
 
-
-//the script starts here
-function startScript(){
-	/* "GLOBAL" VARS */
-	pData = { //the current board status with demo structure
-		totalCards:0,
-		totalComplete:0
-	},
-	set = { //default settings
-		progressOfCards:true,
-		progressOfScrum:false,
-		countCheckLists:true,
-		rememberGlobally:false
-	},
-	backupDoneTitles = ['done','complete','finished'];
-
-
-	/* IMMEDIATE */
-	initEvents();
-}
+/* "GLOBAL" VARS */
+pData = { //the current board status with demo structure
+	totalCards:0,
+	totalComplete:0
+},
+set = { //default settings
+	progressOfCards:true,
+	progressOfScrum:false,
+	countCheckLists:true,
+	rememberGlobally:false,
+	lastSelectedList:''
+},
+percentageComplete = 0,
+backupDoneTitles = ['{bp-done}','done','complete','finished']; //in order of priority
 
 
 /* EVENTS */
@@ -46,7 +29,13 @@ function initEvents(){
 	setInterval(injectUI,1000);
 
 	//reload when the done list setting is changed
-	$('body').on('change','.bp-doneList select',loadData);
+	$('body').on('change','.bp-doneList select',function(){
+		//save the newly selected list
+		set.lastSelectedList = $('.ext-bp .bp-doneList option:selected').text();
+
+		//update the progress
+		loadData();
+	});
 }
 
 
@@ -70,11 +59,38 @@ function injectUI(){
 
 //update the list of cards
 function updateDoneList(){
-	//so we can re-select the proper element
-	var previous = $('.ext-bp .bp-doneList option:selected').text();
+	var newSelection = '',
+		$lists = $('.list');
+
+	//decide which list is selected
+		//if not set by user
+	if(!set.lastSelectedList){
+		//loop through list of titles to check against
+		for(var i = 0, ii = backupDoneTitles.length; i < ii; i++){
+			//exit the loop if this is now set
+			if(newSelection){ break; }
+
+			//check each list and make best guess
+			$.each($lists,function(index){
+				var $this = $(this),
+					listTitle = $this.find('.list-title h2').text();
+
+				//check if this list matches
+				if(listTitle.toLowerCase().indexOf(backupDoneTitles[i].toLowerCase()) >= 0){
+					newSelection = listTitle; //set this list as selected
+					return; //stop checking list when match found
+				}
+			});
+		}
+
+		//save the new selection as the last selected
+		set.lastSelectedList = newSelection;
+	}else{
+		newSelection = set.lastSelectedList;
+	}
 
 	//build "done" list options
-	$.each($('.list'),function(index){
+	$.each($lists,function(index){
 		var $this = $(this),
 			listTitle = $this.find('.list-title h2').text();
 
@@ -83,8 +99,8 @@ function updateDoneList(){
 
 		//see if this element is already in the list
 		if(!$('select option:contains("'+listTitle+'")').length){
-			//add this list, and possible make it selected
-			var selected = (listTitle == previous ? ' selected':'');
+			//add this list, and possibly make it selected
+			var selected = (listTitle == newSelection ? ' selected':'');
 			$('.ext-bp .bp-doneList select').append('<option value="'+index+'"'+selected+'>'+listTitle+'</option>');
 		}
 	});
@@ -104,10 +120,13 @@ function loadData(){
 		var $this = $(this);
 
 		//loop through each card
-		$.each($this.find('.list-card'),function(){
+		$.each($this.find('.list-card').not('.hide'),function(){
 			var numCheckLists = 0;
 
-			//if allowed, count checklists for this car
+			//exit if this card isn't created yet
+			if($(this).hasClass('js-composer')){ return; }
+
+			//if allowed, count checklists for this card
 			if(set.countCheckLists){
 				//look for a checklist
 				var findChecklist = $(this).find('.badges .icon-checklist').parent().find('.badge-text');
@@ -134,8 +153,26 @@ function loadData(){
 //update the progress bar
 function updateProgress(){
 	//determine percentage
-	var percentage = Math.round((pData.totalComplete / pData.totalCards) * 100);
+	var newPercent = Math.round((pData.totalComplete / pData.totalCards) * 100);
 
+	//don't update if nothing changed
+	if(percentageComplete == newPercent){ return; }
+
+	//update the global var
+	percentageComplete = newPercent;
+console.log('updating');
 	//adjust the progress bar
-	$('.bp-progress').width(percentage+'%').find('.bp-pc').text(percentage);
+	$('.bp-progress').width(percentageComplete+'%').find('.bp-pc').text(percentageComplete);
 }
+
+
+/* IMMEDIATE */
+//intializes the script when the page is ready
+chrome.extension.sendMessage({}, function(response) {
+	var readyStateCheckInterval = setInterval(function() {
+	if (document.readyState === "complete") {
+		clearInterval(readyStateCheckInterval);
+		initEvents();
+	}
+	}, 10);
+});
