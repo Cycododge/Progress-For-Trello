@@ -19,7 +19,7 @@ set = { //default settings
 	lastSelectedList:''
 },
 percentageComplete = 0,
-backupDoneTitles = ['{bp-done}','done','complete','finished']; //in order of priority
+backupDoneTitles = ['{bp-done}','done','complete','finished','closed']; //in order of priority
 
 
 /* EVENTS */
@@ -45,6 +45,8 @@ function initEvents(){
 function injectUI(){
 	//if the UI doesn't exist
 	if(!$('.ext-bp').length){
+		console.log('injectUI()');
+
 		//add it to the page
 		$('#board-header').after('<div class="ext-bp"><div class="bp-barContainer"><div class="bp-progress"><span class="bp-pc">0</span>%</div></div><div class="bp-doneList"><select></select></div></div>');
 
@@ -58,7 +60,8 @@ function injectUI(){
 }
 
 //update the list of cards
-function updateDoneList(){
+function updateDoneOptions(){
+	console.log('updateDoneOptions()');
 	var newSelection = '',
 		$lists = $('.list');
 
@@ -108,12 +111,13 @@ function updateDoneList(){
 
 //refresh the data from the board
 function loadData(){
+	console.log('loadData()');
 	//reset
 	pData.totalCards = 0;
 	pData.totalComplete = 0;
 
 	//update the drop down
-	updateDoneList();
+	updateDoneOptions();
 
 	//for each list
 	$.each($('.list'),function(index){
@@ -160,9 +164,9 @@ function updateProgress(){
 
 	//update the global var
 	percentageComplete = newPercent;
-console.log('updating');
 	//adjust the progress bar
 	$('.bp-progress').width(percentageComplete+'%').find('.bp-pc').text(percentageComplete);
+	console.log('updateProgress()');
 }
 
 
