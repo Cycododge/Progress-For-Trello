@@ -18,7 +18,7 @@ UPDATED
 			countCheckLists:true,
 			rememberGlobally:false,
 			lastSelectedList:'',
-			refreshTime:30000
+			refreshTime:500
 		},
 		percentageComplete = 0,
 		backupKeywords = ['{bp-done}','done','complete','finished','closed'], //in order of priority
@@ -127,11 +127,6 @@ UPDATED
 				if(_cards[cardID].attributes.closed){ continue; } //skip if the card is closed
 				if(_cards[cardID].attributes.idList != listID){ continue; } //skip if the card doesn't belong to this list
 
-				//debug
-				if(_cards[cardID].checklistList.length){
-					console.log(_cards[cardID].checklistList);
-				}
-
 				//if allowed count checklists for this card
 				var numCheckLists = 0;
 				if(set.countCheckLists){
@@ -142,11 +137,12 @@ UPDATED
 					}
 				}
 
-				pData.totalCards += numCheckLists || 1; //add this card to the total
+				//add this card to the total
+				pData.totalCards += numCheckLists || 1;
 
-				//if this card is in the "done" list, count towards complete
-				if(index == $('.ext-bp .bp-doneList option:selected').val()){
-					pData.totalComplete += numCheckLists || 1; //add this card to the total
+				//if this card is in the "done" list
+				if(listID == set.lastSelectedList){
+					pData.totalComplete += numCheckLists || 1; //count towards complete
 				}
 			}
 		}
