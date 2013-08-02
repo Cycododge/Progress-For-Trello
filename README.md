@@ -1,4 +1,4 @@
-Board Progress for Trello
+Progress for Trello
 =================
 
 Chrome extension for Trello to get the percentage of cards and their checklists that are "done".
