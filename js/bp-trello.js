@@ -10,18 +10,20 @@ UPDATED
 	/* "GLOBAL" VARS */
 	function resetVars(){
 		return {
-			pData:{ //the current board status with demo structure
+			math:{ //the current board status with demo structure
 				totalCards:0,
 				totalComplete:0
 			},
-			set:{ //default settings
-				progressOfCards:true,
-				progressOfScrum:false,
-				countCheckLists:true,
-				rememberGlobally:false,
+			user:{ //default user settings
+				progressOfCards:true, //
+				progressOfScrum:false, //count scrum points instead of cards/checklists
+				countCheckLists:true, //if card checklists should be counted towards total
+				rememberGlobally:false //if selected list should be appended to title
+			},
+			sys:{ //default system settings
 				lastSelectedList:'', //id of the selected list
-				lastBoardURL:'', //board shortURL element
-				refreshTime:750
+				refreshTime:750, //how often to loop and re-check data (milliseconds)
+				lastBoardURL:'' //board shortURL element
 			},
 			percentageComplete:0,
 			backupKeywords:['{bp-done}','done','live','complete','finished','closed'], //in order of priority
@@ -37,12 +39,12 @@ UPDATED
 	//check that the UI still exists
 		//and load the data continuously (can't figure out how to inject working listeners!)
 	injectUI(); //initial call
-	setInterval(injectUI,bp.set.refreshTime);
+	setInterval(injectUI,bp.sys.refreshTime);
 
 	//reload when the done list setting is changed
 	$('body').on('change','.bp-doneList select',function(){
 		//save the newly selected list
-		bp.set.lastSelectedList = $(this).find('option:selected').val();
+		bp.sys.lastSelectedList = $(this).find('option:selected').val();
 
 		//update the progress
 		loadData();
@@ -55,10 +57,10 @@ UPDATED
 	function injectUI(){
 		//check if on the same board and reset variables
 		var newBoardURL = window.location.pathname.split(/\//gi)[2];
-		if(newBoardURL != bp.set.lastBoardURL){ bp = resetVars(); bp.set.lastBoardURL = newBoardURL; }
+		if(newBoardURL != bp.sys.lastBoardURL){ bp = resetVars(); bp.sys.lastBoardURL = newBoardURL; }
 
 		//if the UI doesn't exist
-		if(!$('.ext-bp').length){
+		if(!document.getElementsByClassName('ext-bp').length){
 			//add it to the page
 			$('#board-header').after('<div class="ext-bp"><div class="bp-barContainer"><div class="bp-progress"><span class="bp-pc">0</span>%</div></div><div class="bp-doneList"><select></select></div></div>');
 
@@ -87,21 +89,21 @@ UPDATED
 		if(!nextDoneList.length){ return false; }
 
 		//if a selected list hasn't been specified
-		if(!bp.set.lastSelectedList){
+		if(!bp.sys.lastSelectedList){
 			//loop through list of keywords to check titles against
 			for(var i = 0, ii = bp.backupKeywords.length; i < ii; i++){
 				//loop through each list title
 				for(var x = 0, xx = nextDoneList.length; x < xx; x++){
 					//if this keyword exists in this list title
 					if(nextDoneList[x].title.toLowerCase().indexOf(bp.backupKeywords[i].toLowerCase()) >= 0){
-						bp.set.lastSelectedList = nextDoneList[x].id; //set this list as selected
+						bp.sys.lastSelectedList = nextDoneList[x].id; //set this list as selected
 						ii = xx = 0; //selection found, break out of loops
 					}
 				}
 			}
 
 			//set the first list as selected
-			if(!bp.set.lastSelectedList){ bp.set.lastSelectedList = nextDoneList[0].id; }
+			if(!bp.sys.lastSelectedList){ bp.sys.lastSelectedList = nextDoneList[0].id; }
 		}
 
 		//compare the nextDoneList with lastDoneList
@@ -112,7 +114,7 @@ UPDATED
 			//loop through nextDoneList
 			for(var i = 0, ii = nextDoneList.length; i < ii; i++){
 				//create the option lists AND set selected
-				listOptions.push('<option value="'+nextDoneList[i].id+'"'+(nextDoneList[i].id == bp.set.lastSelectedList ? ' selected':'')+'>'+nextDoneList[i].title+'</option>');
+				listOptions.push('<option value="'+nextDoneList[i].id+'"'+(nextDoneList[i].id == bp.sys.lastSelectedList ? ' selected':'')+'>'+nextDoneList[i].title+'</option>');
 			}
 
 			//output the list to the page
@@ -125,8 +127,8 @@ UPDATED
 	//refresh the data from the board
 	function loadData(){
 		//reset
-		bp.pData.totalCards = 0;
-		bp.pData.totalComplete = 0;
+		bp.math.totalCards = 0;
+		bp.math.totalComplete = 0;
 		_lists = ModelCache._cache.List;
 		_cards = ModelCache._cache.Card;
 
@@ -147,7 +149,7 @@ UPDATED
 
 				//if allowed count checklists for this card
 				var numCheckLists = 0;
-				if(bp.set.countCheckLists){
+				if(bp.user.countCheckLists){
 					//loops through available checklists
 					for(var i = 0, ii = _cards[cardID].checklistList.length; i < ii; i++){
 						//count the number of checklist items towards total
@@ -156,11 +158,11 @@ UPDATED
 				}
 
 				//add this card to the total
-				bp.pData.totalCards += numCheckLists || 1;
+				bp.math.totalCards += numCheckLists || 1;
 
 				//if this card is in the "done" list
-				if(listID == bp.set.lastSelectedList){
-					bp.pData.totalComplete += numCheckLists || 1; //count towards complete
+				if(listID == bp.sys.lastSelectedList){
+					bp.math.totalComplete += numCheckLists || 1; //count towards complete
 				}
 			}
 		}
@@ -172,7 +174,7 @@ UPDATED
 	//update the progress bar
 	function updateProgress(){
 		//determine percentage
-		var newPercent = Math.round((bp.pData.totalComplete / bp.pData.totalCards) * 100);
+		var newPercent = Math.round((bp.math.totalComplete / bp.math.totalCards) * 100);
 
 		//don't update if nothing changed
 		if(bp.percentageComplete == newPercent){ return; }
