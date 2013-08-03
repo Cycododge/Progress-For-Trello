@@ -14,7 +14,7 @@
     "scripts": [
       "src/bg/background.js"
     ],
-    "persistent": true
+    "persistent": false
   },
   "page_action": {
     "default_icon": "icons/icon19.png",

@@ -3,7 +3,7 @@ AUTHOR
 	Cycododge
 
 UPDATED
-	7/31/2013
+	8/2/2013
 */
 
 (function($){
@@ -20,6 +20,8 @@ UPDATED
 			lastSelectedList:'',
 			refreshTime:500
 		},
+		_lists = [],
+		_cards = [],
 		percentageComplete = 0,
 		backupKeywords = ['{bp-done}','done','complete','finished','closed'], //in order of priority
 		lastDoneList = []; //contains current drop list data to compare against
@@ -126,6 +128,7 @@ UPDATED
 				if(!_cards.hasOwnProperty(cardID)){ continue; } //skip if not a card
 				if(_cards[cardID].attributes.closed){ continue; } //skip if the card is closed
 				if(_cards[cardID].attributes.idList != listID){ continue; } //skip if the card doesn't belong to this list
+				if(_cards[cardID].view.el.className.indexOf('hide') >= 0){ continue; } //skip if hidden
 
 				//if allowed count checklists for this card
 				var numCheckLists = 0;
@@ -161,8 +164,8 @@ UPDATED
 
 		//update the global var
 		percentageComplete = newPercent;
+
 		//adjust the progress bar
 		$('.bp-progress').width(percentageComplete+'%').find('.bp-pc').text(percentageComplete);
-		// console.log('updateProgress()');
 	}
 })(jQuery);
