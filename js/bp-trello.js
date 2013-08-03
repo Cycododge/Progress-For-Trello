@@ -30,8 +30,9 @@ UPDATED
 			lastDoneList:[] //contains current drop list data to compare against
 		}
 	}
+
 	//grab the setup
-	bp = resetVars();
+	var bp = resetVars();
 
 
 	/* EVENTS */
@@ -173,8 +174,11 @@ UPDATED
 
 	//update the progress bar
 	function updateProgress(){
-		//determine percentage
-		var newPercent = Math.round((bp.math.totalComplete / bp.math.totalCards) * 100);
+		//check if there are any cards
+		if(bp.math.totalCards){
+			//determine percentage
+			var newPercent = Math.round((bp.math.totalComplete / bp.math.totalCards) * 100);
+		}
 
 		//don't update if nothing changed
 		if(bp.percentageComplete == newPercent){ return; }
@@ -183,6 +187,6 @@ UPDATED
 		bp.percentageComplete = newPercent;
 
 		//adjust the progress bar
-		$('.bp-progress').width(bp.percentageComplete+'%').find('.bp-pc').text(bp.percentageComplete);
+		$('.bp-progress').animate({width:bp.percentageComplete+'%'}).find('.bp-pc').text(bp.percentageComplete);
 	}
 })(jQuery);
