@@ -8,7 +8,15 @@ UPDATED
 
 (function($){
 	/* "GLOBAL" VARS */
+	//grab the setup
+	var curBoard = window.location.pathname.split(/\//gi)[2];
+		browser = loadLocal(),
+		bp = resetVars();
+console.log(curBoard,browser);
+
+	//reset everything
 	function resetVars(){
+		//give back the refreshed settings
 		return {
 			math:{ //the current board status with demo structure
 				totalCards:0,
@@ -21,9 +29,9 @@ UPDATED
 				rememberGlobally:false //if selected list should be appended to title
 			},
 			sys:{ //default system settings
-				lastSelectedList:'', //id of the selected list
+				lastSelectedList:browser[curBoard].lastSelectedList || '', //id of the selected list
 				refreshTime:750, //how often to loop and re-check data (milliseconds)
-				lastBoardURL:'' //board shortURL element
+				lastBoardURL:curBoard //board shortURL element
 			},
 			percentageComplete:0,
 			backupKeywords:['{bp-done}','done','live','complete','finished','closed'], //in order of priority
@@ -31,8 +39,33 @@ UPDATED
 		}
 	}
 
-	//grab the setup
-	var bp = resetVars();
+	//save the settings back to the browser
+	function saveLocal(key,val){
+		browser[curBoard][key] = val;
+		localStorage.setItem('bp-ext',JSON.stringify(browser));
+	}
+
+	//load settings from the browser
+	function loadLocal(){
+		//structure of localStorage settings
+		/*
+		local = {
+			'4fgtr4':{ //the shortURL of the board settings
+				lastSelectedList:''
+			}
+		}
+		*/
+
+		//load the settings from localStorage
+		var local = JSON.parse(localStorage.getItem('bp-ext') || '{}');
+
+		//check that the current board has saved settings
+		if(!local[curBoard]){ local[curBoard] = {}; }
+
+		//send it back up top
+		return local;
+	}
+
 
 
 	/* EVENTS */
@@ -46,6 +79,7 @@ UPDATED
 	$('body').on('change','.bp-doneList select',function(){
 		//save the newly selected list
 		bp.sys.lastSelectedList = $(this).find('option:selected').val();
+		saveLocal('lastSelectedList',bp.sys.lastSelectedList); //save to the browser
 
 		//update the progress
 		loadData();
@@ -57,8 +91,8 @@ UPDATED
 	//push the progress bar to the UI if it doesn't exist
 	function injectUI(){
 		//check if on the same board and reset variables
-		var newBoardURL = window.location.pathname.split(/\//gi)[2];
-		if(newBoardURL != bp.sys.lastBoardURL){ bp = resetVars(); bp.sys.lastBoardURL = newBoardURL; }
+		curBoard = window.location.pathname.split(/\//gi)[2];
+		if(curBoard != bp.sys.lastBoardURL){ bp = resetVars(); bp.sys.lastBoardURL = curBoard; }
 
 		//if the UI doesn't exist
 		if(!document.getElementsByClassName('ext-bp').length){
