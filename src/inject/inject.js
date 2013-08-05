@@ -19,7 +19,7 @@ chrome.extension.sendMessage({}, function(response) {
 			//add the script to the page
 			var scr = document.createElement("script");
 			scr.type = "text/javascript";
-			scr.src = chrome.extension.getURL("js/bp-trello.js")+'?v='+chrome.app.getDetails().version;
+			scr.src = chrome.extension.getURL("js/bp-trello.js")+'?v='+(new Date().get Time());
 			(document.head || document.body || document.documentElement).appendChild(scr);
 		}
 	}, 10);
