@@ -3,29 +3,26 @@ AUTHOR
 	Cycododge
 
 UPDATED
-	8/4/2013
+	8/5/2013
 */
 
 (function($){
 	/* "GLOBAL" VARS */
-	//grab the setup
-	var curBoard = getBoard().id,
-		browser = loadLocal(),
-		bp = resetVars(),
-		_lists = [], _cards = [];
 
-	//get the board data
-	function getBoard(){
-		//grab the first card and return the board
-		console.log('ModelCache._cache.Card',ModelCache._cache.Card);
-		for(var cardID in ModelCache._cache.Card){
-			if(!ModelCache._cache.Card.hasOwnProperty(cardID)){ continue; }
-			return ModelCache._cache.Card[cardID].getBoard(); //send back the board
+	//initialize variables.
+	var _lists = [], _cards = [], browser = {}, bp = {}, curBoard = '';
+
+	//get the current board, then fire the script
+	var curBoardInterval = setInterval(function(){
+		curBoard = getBoard(); //set as current board to avoid additional loop
+
+		//if something was returned, exit loop and continue script
+		if(curBoard.hasOwnProperty('id')){
+			curBoard = curBoard.id; //reset itself to the
+			clearInterval(curBoardInterval); //exit the loop
+			initScript(); //start the script
 		}
-
-		//if the function made it here, the board was not retrieved, check again.
-
-	}
+	},50);
 
 	//reset everything
 	function resetVars(){
@@ -55,6 +52,45 @@ UPDATED
 		}
 	}
 
+	//start running the rest of the script and init events
+	function initScript(){
+		//grab the setup
+		browser = loadLocal();
+		bp = resetVars();
+		initEvents();
+	}
+
+	//setup the events
+	function initEvents(){
+		//check that the UI still exists
+			//and load the data continuously (can't figure out how to inject working listeners!)
+		injectUI(); //initial call
+		setInterval(injectUI,bp.sys.refreshTime);
+
+		//reload when the done list setting is changed
+		$('body').on('change','.bp-doneList select',function(){
+			//save the newly selected list
+			bp.sys.lastSelectedList = $(this).find('option:selected').val();
+			saveLocal('lastSelectedList',bp.sys.lastSelectedList); //save to the browser
+
+			//update the progress
+			loadData();
+		});
+	}
+
+	//get the board data
+	function getBoard(){
+		//grab the first card and return the board
+		for(var cardID in ModelCache._cache.Card){
+			if(!ModelCache._cache.Card.hasOwnProperty(cardID)){ continue; }
+			return ModelCache._cache.Card[cardID].getBoard(); //send back the board
+		}
+
+		//if the function made it here, the board was not retrieved.
+		return '';
+	}
+
+
 	//save the settings back to the browser
 	function saveLocal(key,val){
 		browser[curBoard][key] = val;
@@ -82,32 +118,9 @@ UPDATED
 		return local;
 	}
 
-
-
-	/* EVENTS */
-
-	//check that the UI still exists
-		//and load the data continuously (can't figure out how to inject working listeners!)
-	injectUI(); //initial call
-	setInterval(injectUI,bp.sys.refreshTime);
-
-	//reload when the done list setting is changed
-	$('body').on('change','.bp-doneList select',function(){
-		//save the newly selected list
-		bp.sys.lastSelectedList = $(this).find('option:selected').val();
-		saveLocal('lastSelectedList',bp.sys.lastSelectedList); //save to the browser
-
-		//update the progress
-		loadData();
-	});
-
-
-	/* FUNCTIONS */
-
 	//push the progress bar to the UI if it doesn't exist
 	function injectUI(){
 		//check if on the same board and reset variables
-		console.log('getBoard()',getBoard());
 		curBoard = getBoard().id;
 		if(curBoard != bp.sys.lastBoardURL){ bp = resetVars(); bp.sys.lastBoardURL = curBoard; }
 
