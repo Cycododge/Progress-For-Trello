@@ -3,19 +3,35 @@ AUTHOR
 	Cycododge
 
 UPDATED
-	8/3/2013
+	8/4/2013
 */
 
 (function($){
 	/* "GLOBAL" VARS */
 	//grab the setup
-	var curBoard = window.location.pathname.split(/\//gi)[2];
+	var curBoard = getBoard().id,
 		browser = loadLocal(),
-		bp = resetVars();
-console.log(curBoard,browser);
+		bp = resetVars(),
+		_lists = [], _cards = [];
+
+	//get the board data
+	function getBoard(){
+		//grab the first card and return the board
+		console.log('ModelCache._cache.Card',ModelCache._cache.Card);
+		for(var cardID in ModelCache._cache.Card){
+			if(!ModelCache._cache.Card.hasOwnProperty(cardID)){ continue; }
+			return ModelCache._cache.Card[cardID].getBoard(); //send back the board
+		}
+
+		//if the function made it here, the board was not retrieved, check again.
+
+	}
 
 	//reset everything
 	function resetVars(){
+		//check to see if this board exists in browser{}
+		if(!browser[curBoard]){ browser[curBoard] = {}; }
+
 		//give back the refreshed settings
 		return {
 			math:{ //the current board status with demo structure
@@ -91,7 +107,8 @@ console.log(curBoard,browser);
 	//push the progress bar to the UI if it doesn't exist
 	function injectUI(){
 		//check if on the same board and reset variables
-		curBoard = window.location.pathname.split(/\//gi)[2];
+		console.log('getBoard()',getBoard());
+		curBoard = getBoard().id;
 		if(curBoard != bp.sys.lastBoardURL){ bp = resetVars(); bp.sys.lastBoardURL = curBoard; }
 
 		//if the UI doesn't exist
@@ -129,15 +146,15 @@ console.log(curBoard,browser);
 			for(var i = 0, ii = bp.backupKeywords.length; i < ii; i++){
 				//loop through each list title
 				for(var x = 0, xx = nextDoneList.length; x < xx; x++){
-					//if this keyword exists in this list title
+					//if this keyword exists in this lists title
 					if(nextDoneList[x].title.toLowerCase().indexOf(bp.backupKeywords[i].toLowerCase()) >= 0){
 						bp.sys.lastSelectedList = nextDoneList[x].id; //set this list as selected
-						ii = xx = 0; //selection found, break out of loops
+						ii = xx = 0; //selection found, break out of all loops
 					}
 				}
 			}
 
-			//set the first list as selected
+			//set the first list as selected if still not set
 			if(!bp.sys.lastSelectedList){ bp.sys.lastSelectedList = nextDoneList[0].id; }
 		}
 
@@ -151,7 +168,7 @@ console.log(curBoard,browser);
 				//create the option lists AND set selected
 				listOptions.push('<option value="'+nextDoneList[i].id+'"'+(nextDoneList[i].id == bp.sys.lastSelectedList ? ' selected':'')+'>'+nextDoneList[i].title+'</option>');
 			}
-
+console.log($('.ext-bp .bp-doneList select'));
 			//output the list to the page
 			$('.ext-bp .bp-doneList select').html(listOptions.join(''));
 		}
