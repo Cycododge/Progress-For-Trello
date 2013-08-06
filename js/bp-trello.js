@@ -3,7 +3,7 @@ AUTHOR
 	Cycododge
 
 UPDATED
-	8/5/2013
+	8/6/2013
 */
 
 (function($){
@@ -11,7 +11,7 @@ UPDATED
 
 	//initialize variables.
 	var _lists = [], _cards = [], browser = {}, bp = {}, curBoard = '', firstVisit = false,
-		injectedHTML = '<div class="ext-bp"><div class="optionsIcon icon-sm icon-checklist"></div><div class="bp-barContainer"><div class="bp-progress"><span class="bp-pc">0%</span></div></div><div style="display:none;" class="bp-doneList"><select></select></div></div>';
+		injectedHTML = '<div class="ext-bp"><div class="optionsIcon icon-sm icon-checklist"></div><div class="bp-barContainer"><div class="bp-progress"><span style="display: none;" class="bp-pc">0%</span></div></div><div style="display:none;" class="bp-doneList"><select></select></div></div>';
 
 	//get the current board, then fire the script
 	var curBoardInterval = setInterval(function(){
@@ -52,7 +52,7 @@ UPDATED
 			},
 			sys:{ //default system settings
 				lastSelectedList:browser[curBoard].lastSelectedList || '', //id of the selected list
-				refreshTime:750, //how often to loop and re-check data (milliseconds)
+				refreshTime:500, //how often to loop and re-check data (milliseconds)
 				lastWidth:0, //the width of the header
 				lastBoardURL:curBoard //board shortURL element
 			},
@@ -135,18 +135,21 @@ UPDATED
 		if(!document.getElementsByClassName('ext-bp').length){
 			//add it to the page
 			$('#board-header').after(injectedHTML);
-			$('.ext-bp').slideDown();
-		}
+			$('.ext-bp').slideDown(continueLoad);
+		}else{ continueLoad(); }
 
-		//detect width changes
-		if($('#board-header').width() != bp.sys.lastWidth){
-			//set progress width
-			bp.sys.lastWidth = $('#board-header').width();
-			$('.ext-bp .bp-barContainer').animate({width:bp.sys.lastWidth});
-		}
+		//allows for inject animation to complete
+		function continueLoad(){
+			//detect width changes
+			if($('#board-header').width() != bp.sys.lastWidth){
+				//set progress width
+				bp.sys.lastWidth = $('#board-header').width();
+				$('.ext-bp .bp-barContainer').animate({width:bp.sys.lastWidth}).find('.bp-pc').slideDown();
+			}
 
-		//reload the data
-		loadData();
+			//reload the data
+			loadData();
+		}
 	}
 
 	//update the list of cards
