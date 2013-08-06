@@ -10,7 +10,8 @@ UPDATED
 	/* "GLOBAL" VARS */
 
 	//initialize variables.
-	var _lists = [], _cards = [], browser = {}, bp = {}, curBoard = '';
+	var _lists = [], _cards = [], browser = {}, bp = {}, curBoard = '', firstVisit = false,
+		injectedHTML = '<div class="ext-bp"><div class="optionsIcon icon-sm icon-checklist"></div><div class="bp-barContainer"><div class="bp-progress"><span class="bp-pc">0%</span></div></div><div style="display:none;" class="bp-doneList"><select></select></div></div>';
 
 	//get the current board, then fire the script
 	var curBoardInterval = setInterval(function(){
@@ -24,10 +25,18 @@ UPDATED
 		}
 	},50);
 
+	//start running the rest of the script and init events
+	function initScript(){
+		//grab the setup
+		browser = loadLocal(); //load user saved
+		bp = resetVars(); //create script vars
+		initEvents(); //attach listeners and start loop
+	}
+
 	//reset everything
 	function resetVars(){
 		//check to see if this board exists in browser{}
-		if(!browser[curBoard]){ browser[curBoard] = {}; }
+		if(!browser[curBoard]){ browser[curBoard] = {}; firstVisit = true; }
 
 		//give back the refreshed settings
 		return {
@@ -44,20 +53,13 @@ UPDATED
 			sys:{ //default system settings
 				lastSelectedList:browser[curBoard].lastSelectedList || '', //id of the selected list
 				refreshTime:750, //how often to loop and re-check data (milliseconds)
+				lastWidth:0, //the width of the header
 				lastBoardURL:curBoard //board shortURL element
 			},
 			percentageComplete:0,
 			backupKeywords:['{bp-done}','done','live','complete','finished','closed'], //in order of priority
 			lastDoneList:[] //contains current drop list data to compare against
-		}
-	}
-
-	//start running the rest of the script and init events
-	function initScript(){
-		//grab the setup
-		browser = loadLocal();
-		bp = resetVars();
-		initEvents();
+		};
 	}
 
 	//setup the events
@@ -75,6 +77,11 @@ UPDATED
 
 			//update the progress
 			loadData();
+		});
+
+		//listen for the window to be resized and update bar width
+		$('body').on('resize','.ext-bp .bp-barContainer',function(){
+			$(this).width($('#board-header').width());
 		});
 	}
 
@@ -102,8 +109,8 @@ UPDATED
 		//structure of localStorage settings
 		/*
 		local = {
-			'4fgtr4':{ //the shortURL of the board settings
-				lastSelectedList:''
+			'154515sd554dfd5f4540':{ //boardID
+				lastSelectedList:'154sd554ds5f4s5d1' //listID
 			}
 		}
 		*/
@@ -127,10 +134,15 @@ UPDATED
 		//if the UI doesn't exist
 		if(!document.getElementsByClassName('ext-bp').length){
 			//add it to the page
-			$('#board-header').after('<div class="ext-bp"><div class="bp-barContainer"><div class="bp-progress"><span class="bp-pc">0</span>%</div></div><div class="bp-doneList"><select></select></div></div>');
-
-			//show the progress bar
+			$('#board-header').after(injectedHTML);
 			$('.ext-bp').slideDown();
+		}
+
+		//detect width changes
+		if($('#board-header').width() != bp.sys.lastWidth){
+			//set progress width
+			bp.sys.lastWidth = $('#board-header').width();
+			$('.ext-bp .bp-barContainer').animate({width:bp.sys.lastWidth});
 		}
 
 		//reload the data
@@ -177,11 +189,11 @@ UPDATED
 			bp.lastDoneList = JSON.parse(JSON.stringify(nextDoneList));
 
 			//loop through nextDoneList
-			for(var i = 0, ii = nextDoneList.length; i < ii; i++){
+			for(var n = 0, nn = nextDoneList.length; n < nn; n++){
 				//create the option lists AND set selected
-				listOptions.push('<option value="'+nextDoneList[i].id+'"'+(nextDoneList[i].id == bp.sys.lastSelectedList ? ' selected':'')+'>'+nextDoneList[i].title+'</option>');
+				listOptions.push('<option value="'+nextDoneList[n].id+'"'+(nextDoneList[n].id == bp.sys.lastSelectedList ? ' selected':'')+'>'+nextDoneList[n].title+'</option>');
 			}
-console.log($('.ext-bp .bp-doneList select'));
+
 			//output the list to the page
 			$('.ext-bp .bp-doneList select').html(listOptions.join(''));
 		}
@@ -239,9 +251,10 @@ console.log($('.ext-bp .bp-doneList select'));
 	//update the progress bar
 	function updateProgress(){
 		//check if there are any cards
+		var newPercent = 0;
 		if(bp.math.totalCards){
 			//determine percentage
-			var newPercent = Math.round((bp.math.totalComplete / bp.math.totalCards) * 100);
+			newPercent = Math.round((bp.math.totalComplete / bp.math.totalCards) * 100);
 		}
 
 		//don't update if nothing changed
@@ -251,6 +264,6 @@ console.log($('.ext-bp .bp-doneList select'));
 		bp.percentageComplete = newPercent;
 
 		//adjust the progress bar
-		$('.bp-progress').animate({width:bp.percentageComplete+'%'}).find('.bp-pc').text(bp.percentageComplete);
+		$('.bp-progress').animate({width:bp.percentageComplete+'%'}).find('.bp-pc').text(bp.percentageComplete+'%');
 	}
 })(jQuery);
