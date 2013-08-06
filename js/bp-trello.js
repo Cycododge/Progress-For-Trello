@@ -11,7 +11,7 @@ UPDATED
 
 	//initialize variables.
 	var _lists = [], _cards = [], browser = {}, bp = {}, curBoard = '', firstVisit = false,
-		injectedHTML = '<div class="ext-bp"><div class="optionsIcon icon-sm icon-checklist"></div><div class="bp-barContainer"><div class="bp-progress"><span style="display: none;" class="bp-pc">0%</span></div></div><div style="display:none;" class="bp-doneList"><select></select></div></div>';
+		injectedHTML = '<div class="ext-bp"><div class="bp-optionsIcon icon-sm icon-checklist"></div><div class="bp-barContainer"><div class="bp-progress"><span style="display:none;" class="bp-pc">0%</span></div></div><div class="bp-settings"><div class="bp-doneList"><select></select></div></div></div>';
 
 	//get the current board, then fire the script
 	var curBoardInterval = setInterval(function(){
@@ -81,7 +81,22 @@ UPDATED
 
 		//listen for the window to be resized and update bar width
 		$('body').on('resize','.ext-bp .bp-barContainer',function(){
-			$(this).width($('#board-header').width());
+			bp.sys.lastWidth = $('#board-header').width();
+			$(this).animate({width:bp.sys.lastWidth});
+		});
+
+		//open/close settings
+		$('body').on('click','.ext-bp .bp-optionsIcon',function(){
+			var $this = $(this);
+
+			//if not open
+			if(!$this.hasClass('bp-active')){
+				$this.addClass('bp-active'); //mark as open
+				$('.ext-bp .bp-settings').slideDown(); //open the menu
+			}else{
+				$this.removeClass('bp-active'); //remove mark
+				$('.ext-bp .bp-settings').slideUp(); //close the menu
+			}
 		});
 	}
 
