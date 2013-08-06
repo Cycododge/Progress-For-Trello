@@ -9,3 +9,11 @@ Chrome Install
 =================
 
 Navigate to chrome://extensions and click "Load unpacked extension". Visit http://trello.com!
+
+
+
+
+
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Cycododge/Progress-For-Trello/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
