@@ -3,7 +3,7 @@ AUTHOR
 	Cycododge
 
 UPDATED
-	7/31/2013 v1.0.0
+	8/6/2013 v1.0.0
 
 PURPOSE
 	Injects script into DOM for access to page variables
@@ -19,7 +19,7 @@ chrome.extension.sendMessage({}, function(response) {
 			//add the script to the page
 			var scr = document.createElement("script");
 			scr.type = "text/javascript";
-			scr.src = chrome.extension.getURL("js/bp-trello.js")+'?v='+(new Date().get Time());
+			scr.src = chrome.extension.getURL("js/bp-trello.js")+'?v='+(new Date().getTime());
 			(document.head || document.body || document.documentElement).appendChild(scr);
 		}
 	}, 10);
