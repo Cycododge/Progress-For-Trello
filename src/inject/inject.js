@@ -3,7 +3,7 @@ AUTHOR
 	Cycododge
 
 UPDATED
-	8/6/2013 v1.0.0
+	8/7/2013 v1.0.0
 
 PURPOSE
 	Injects script into DOM for access to page variables
