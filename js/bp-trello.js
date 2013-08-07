@@ -3,7 +3,7 @@ AUTHOR
 	Cycododge
 
 UPDATED
-	8/6/2013
+	8/7/2013
 */
 
 (function($){
@@ -48,14 +48,13 @@ UPDATED
 				progressOfCards:true, //
 				progressOfScrum:false, //count scrum points instead of cards/checklists
 				countCheckLists:true, //if card checklists should be counted towards total
-				rememberGlobally:false, //if selected list should be appended to title
-				settingsOpen:browser[curBoard].settingsOpen || true //if the settings menu was last open or closed
+				rememberGlobally:false //if selected list should be appended to title
 			},
 			sys:{ //default system settings
 				lastSelectedList:browser[curBoard].lastSelectedList || '', //id of the selected list
 				refreshTime:500, //how often to loop and re-check data (milliseconds)
 				lastMenuOpen:'', //if the right menu is open
-				settingsOpen:false, //is the settings are visible
+				settingsOpen:(typeof browser[curBoard].settingsOpen == 'boolean' ? browser[curBoard].settingsOpen : true), //if the settings are visible
 				lastBoardURL:curBoard //board shortURL element
 			},
 			percentageComplete:0,
@@ -74,7 +73,7 @@ UPDATED
 		//reload when the done list setting is changed
 		$('body').on('change','.bp-doneList select',function(){
 			//save the newly selected list
-			bp.sys.lastSelectedList = $(this).find('option:selected').val();
+			bp.sys.lastSelectedList = $(this).find('option:selected').val(); //update in script
 			saveLocal('lastSelectedList',bp.sys.lastSelectedList); //save to the browser
 
 			//update the progress
@@ -91,16 +90,19 @@ UPDATED
 		$('body').on('click','.ext-bp .bp-optionsIcon',function(){
 			var $this = $(this);
 
-			//if not open
+			//if not open, open it
 			if(!$this.hasClass('bp-active')){
-				bp.sys.settingsOpen = true;
+				bp.sys.settingsOpen = true; //update script
 				$this.addClass('bp-active'); //mark as open
 				$('.ext-bp .bp-settings').slideDown(); //open the menu
 			}else{
-				bp.sys.settingsOpen = false;
+				bp.sys.settingsOpen = false; //update script
 				$this.removeClass('bp-active'); //remove mark
 				$('.ext-bp .bp-settings').slideUp(); //close the menu
 			}
+
+			//save the new setting
+			saveLocal('settingsOpen',bp.sys.settingsOpen);
 		});
 
 		//close settings
@@ -181,7 +183,7 @@ UPDATED
 			}
 
 			//if supposed to be open, but not
-			if(bp.user.settingsOpen && !bp.sys.settingsOpen){ $('.ext-bp .bp-optionsIcon').trigger('click'); }
+			if(bp.sys.settingsOpen && !$('.ext-bp .bp-optionsIcon').hasClass('bp-active')){ $('.ext-bp .bp-optionsIcon').trigger('click'); }
 
 			//reload the data
 			loadData();
