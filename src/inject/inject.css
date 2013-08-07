@@ -3,7 +3,7 @@
 .ext-bp .bp-barContainer, .ext-bp .bp-doneList { display: inline-block; }
 
 /* PROGRESS */
-.ext-bp .bp-barContainer { box-shadow: 0 1px 3px #000 inset, 0 1px 0 #444; background-color: #ddd; border: 1px solid #000; border-radius: 5px; margin-bottom: 6px; }
+.ext-bp .bp-barContainer { box-shadow: 0 1px 3px #000 inset, 0 1px 0 #444; background-color: #ddd; border: 1px solid #000; border-radius: 5px; margin-bottom: 6px; width: 96%; }
 .ext-bp .bp-progress { width: 0; background-color: #27709b;  border-radius: 3px; box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset; }
 .ext-bp .bp-pc { cursor: default; display: inline-block; margin: 1px 0 0 5px; color: #fff; text-shadow: 2px 2px 2px #000; }
 

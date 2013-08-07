@@ -53,7 +53,7 @@ UPDATED
 			sys:{ //default system settings
 				lastSelectedList:browser[curBoard].lastSelectedList || '', //id of the selected list
 				refreshTime:500, //how often to loop and re-check data (milliseconds)
-				lastWidth:0, //the width of the header
+				lastMenuOpen:'', //if the right menu is open
 				lastBoardURL:curBoard //board shortURL element
 			},
 			percentageComplete:0,
@@ -80,9 +80,9 @@ UPDATED
 		});
 
 		//listen for the window to be resized and update bar width
-		$('body').on('resize','.ext-bp .bp-barContainer',function(){
-			bp.sys.lastWidth = $('#board-header').width();
-			$(this).animate({width:bp.sys.lastWidth});
+		$(window).on('resize',function(){
+			// bp.sys.lastMenuOpen = $('#board-header').width();
+			$('.ext-bp .bp-barContainer,.ext-bp .bp-settings').animate({width:$('#header').width()-30});
 		});
 
 		//open/close settings
@@ -156,10 +156,20 @@ UPDATED
 		//allows for inject animation to complete
 		function continueLoad(){
 			//detect width changes
-			if($('#board-header').width() != bp.sys.lastWidth){
-				//set progress width
-				bp.sys.lastWidth = $('#board-header').width();
-				$('.ext-bp .bp-barContainer').animate({width:bp.sys.lastWidth}).find('.bp-pc').slideDown();
+			var curMenuOpen = !$('.board-wrapper').hasClass('disabled-all-widgets');
+			if(bp.sys.lastMenuOpen !== curMenuOpen){
+				//save for next check
+				bp.sys.lastMenuOpen = curMenuOpen;
+
+				//if menu open
+				var newWidth = $('#header').width() - 30;
+				if(curMenuOpen){
+					//set width to header
+					newWidth = $('#board-header').width();
+				}
+
+				//set the UI width
+				$('.ext-bp .bp-barContainer,.ext-bp .bp-settings').delay(100).animate({width:newWidth}).find('.bp-pc').slideDown();
 			}
 
 			//reload the data
