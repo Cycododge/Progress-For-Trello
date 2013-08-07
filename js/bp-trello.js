@@ -11,7 +11,7 @@ UPDATED
 
 	//initialize variables.
 	var _lists = [], _cards = [], browser = {}, bp = {}, curBoard = '', firstVisit = false,
-		injectedHTML = '<div class="ext-bp"><div class="bp-optionsIcon icon-sm icon-checklist"></div><div class="bp-barContainer"><div class="bp-progress"><span style="display:none;" class="bp-pc">0%</span></div></div><div class="bp-settings"><div class="bp-doneList"><select></select></div></div></div>';
+		injectedHTML = '<div class="ext-bp"><div class="bp-optionsIcon icon-sm icon-checklist bp-button"></div><div class="bp-barContainer"><div class="bp-progress"><span style="display:none;" class="bp-pc">0%</span></div></div><div class="bp-settings"><div class="bp-doneList"><select></select></div><div class="bp-saveSettings bp-button">Close</div></div></div>';
 
 	//get the current board, then fire the script
 	var curBoardInterval = setInterval(function(){
@@ -48,12 +48,14 @@ UPDATED
 				progressOfCards:true, //
 				progressOfScrum:false, //count scrum points instead of cards/checklists
 				countCheckLists:true, //if card checklists should be counted towards total
-				rememberGlobally:false //if selected list should be appended to title
+				rememberGlobally:false, //if selected list should be appended to title
+				settingsOpen:browser[curBoard].settingsOpen || true //if the settings menu was last open or closed
 			},
 			sys:{ //default system settings
 				lastSelectedList:browser[curBoard].lastSelectedList || '', //id of the selected list
 				refreshTime:500, //how often to loop and re-check data (milliseconds)
 				lastMenuOpen:'', //if the right menu is open
+				settingsOpen:false, //is the settings are visible
 				lastBoardURL:curBoard //board shortURL element
 			},
 			percentageComplete:0,
@@ -91,13 +93,19 @@ UPDATED
 
 			//if not open
 			if(!$this.hasClass('bp-active')){
+				bp.sys.settingsOpen = true;
 				$this.addClass('bp-active'); //mark as open
 				$('.ext-bp .bp-settings').slideDown(); //open the menu
 			}else{
+				bp.sys.settingsOpen = false;
 				$this.removeClass('bp-active'); //remove mark
 				$('.ext-bp .bp-settings').slideUp(); //close the menu
 			}
 		});
+
+		//close settings
+		$('body').on('click','.ext-bp .bp-saveSettings',function(){
+			$('.ext-bp .bp-optionsIcon').trigger('click'); });
 	}
 
 	//get the board data
@@ -125,7 +133,8 @@ UPDATED
 		/*
 		local = {
 			'154515sd554dfd5f4540':{ //boardID
-				lastSelectedList:'154sd554ds5f4s5d1' //listID
+				lastSelectedList:'154sd554ds5f4s5d1', //listID,
+				settingsOpen:false
 			}
 		}
 		*/
@@ -148,9 +157,8 @@ UPDATED
 
 		//if the UI doesn't exist
 		if(!document.getElementsByClassName('ext-bp').length){
-			//add it to the page
-			$('#board-header').after(injectedHTML);
-			$('.ext-bp').slideDown(continueLoad);
+			$('#board-header').after(injectedHTML); //add html to the page
+			$('.ext-bp').slideDown(continueLoad); //open the progress bar
 		}else{ continueLoad(); }
 
 		//allows for inject animation to complete
@@ -171,6 +179,9 @@ UPDATED
 				//set the UI width
 				$('.ext-bp .bp-barContainer,.ext-bp .bp-settings').delay(100).animate({width:newWidth}).find('.bp-pc').slideDown();
 			}
+
+			//if supposed to be open, but not
+			if(bp.user.settingsOpen && !bp.sys.settingsOpen){ $('.ext-bp .bp-optionsIcon').trigger('click'); }
 
 			//reload the data
 			loadData();
