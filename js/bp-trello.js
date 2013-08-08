@@ -3,7 +3,7 @@ AUTHOR
 	Cycododge
 
 UPDATED
-	8/7/2013
+	8/8/2013
 */
 
 (function($){
@@ -47,7 +47,7 @@ UPDATED
 			user:{ //default user settings
 				progressOfCards:true, //
 				progressOfScrum:false, //count scrum points instead of cards/checklists
-				countCheckLists:(typeof browser[curBoard].countCheckLists == 'boolean' ? browser[curBoard].countCheckLists : true), //if card checklists should be counted towards total
+				countCheckLists:(typeof browser[curBoard].countCheckLists == 'boolean' ? browser[curBoard].countCheckLists : false), //if card checklists should be counted towards total
 				rememberGlobally:false //if selected list should be appended to title
 			},
 			sys:{ //default system settings
@@ -132,13 +132,13 @@ UPDATED
 	//save the settings back to the browser
 	function saveLocal(key,val){
 		browser[curBoard][key] = val;
-		localStorage.setItem('bp-ext',JSON.stringify(browser));
+		localStorage.setItem('ext-bp',JSON.stringify(browser));
 	}
 
 	//load settings from the browser
 	function loadLocal(){
 		//load the settings from localStorage
-		var local = JSON.parse(localStorage.getItem('bp-ext') || '{}');
+		var local = JSON.parse(localStorage.getItem('ext-bp') || '{}');
 
 		//check that the current board has saved settings
 		if(!local[curBoard]){ local[curBoard] = {}; }
