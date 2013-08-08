@@ -11,7 +11,7 @@ UPDATED
 
 	//initialize variables.
 	var _lists = [], _cards = [], browser = {}, bp = {}, curBoard = '', firstVisit = false,
-		injectedHTML = '<div class="ext-bp"><div class="bp-optionsIcon icon-sm icon-checklist bp-button"></div><div class="bp-barContainer"><div class="bp-progress"><span style="display:none;" class="bp-pc">0%</span></div></div><div class="bp-settings"><div class="bp-doneList"><select></select></div><div class="bp-saveSettings bp-button">Close</div></div></div>';
+		injectedHTML = '<div class="ext-bp"><div class="bp-optionsIcon icon-sm icon-checklist bp-button"></div><div class="bp-barContainer"><div class="bp-progress" style="width:20%;"><span class="bp-pc">0%</span></div></div><div class="bp-settings"><div class="bp-column"><select class="bp-doneList"></select></div><div class="bp-column"><div class="bp-inputContainer"><input data-setting="countCheckLists" type="checkbox" />Track Checklists</div></div><div class="bp-saveSettings bp-button">Close</div></div></div>';
 
 	//get the current board, then fire the script
 	var curBoardInterval = setInterval(function(){
@@ -47,7 +47,7 @@ UPDATED
 			user:{ //default user settings
 				progressOfCards:true, //
 				progressOfScrum:false, //count scrum points instead of cards/checklists
-				countCheckLists:true, //if card checklists should be counted towards total
+				countCheckLists:(typeof browser[curBoard].countCheckLists == 'boolean' ? browser[curBoard].countCheckLists : true), //if card checklists should be counted towards total
 				rememberGlobally:false //if selected list should be appended to title
 			},
 			sys:{ //default system settings
@@ -70,8 +70,16 @@ UPDATED
 		injectUI(); //initial call
 		setInterval(injectUI,bp.sys.refreshTime);
 
+		//update settings as they are checked
+		$('body').on('change','.ext-bp .bp-settings input[type="checkbox"]',function(){
+			//save the new status
+			var setting = $(this).data('setting');
+			bp.user[setting] = $(this).prop('checked');
+			saveLocal(setting,bp.user[setting]); //save to the browser
+		});
+
 		//reload when the done list setting is changed
-		$('body').on('change','.bp-doneList select',function(){
+		$('body').on('change','.ext-bp .bp-doneList',function(){
 			//save the newly selected list
 			bp.sys.lastSelectedList = $(this).find('option:selected').val(); //update in script
 			saveLocal('lastSelectedList',bp.sys.lastSelectedList); //save to the browser
@@ -82,7 +90,6 @@ UPDATED
 
 		//listen for the window to be resized and update bar width
 		$(window).on('resize',function(){
-			// bp.sys.lastMenuOpen = $('#board-header').width();
 			$('.ext-bp .bp-barContainer,.ext-bp .bp-settings').animate({width:$('#header').width()-30});
 		});
 
@@ -122,7 +129,6 @@ UPDATED
 		return '';
 	}
 
-
 	//save the settings back to the browser
 	function saveLocal(key,val){
 		browser[curBoard][key] = val;
@@ -131,16 +137,6 @@ UPDATED
 
 	//load settings from the browser
 	function loadLocal(){
-		//structure of localStorage settings
-		/*
-		local = {
-			'154515sd554dfd5f4540':{ //boardID
-				lastSelectedList:'154sd554ds5f4s5d1', //listID,
-				settingsOpen:false
-			}
-		}
-		*/
-
 		//load the settings from localStorage
 		var local = JSON.parse(localStorage.getItem('bp-ext') || '{}');
 
@@ -160,7 +156,12 @@ UPDATED
 		//if the UI doesn't exist
 		if(!document.getElementsByClassName('ext-bp').length){
 			$('#board-header').after(injectedHTML); //add html to the page
-			$('.ext-bp').slideDown(continueLoad); //open the progress bar
+
+			//create the initial settings
+			$('.ext-bp input[data-setting="countCheckLists"]').prop('checked',browser[curBoard].countCheckLists);
+
+			//open the progress bar
+			$('.ext-bp').slideDown(continueLoad);
 		}else{ continueLoad(); }
 
 		//allows for inject animation to complete
@@ -236,7 +237,7 @@ UPDATED
 			}
 
 			//output the list to the page
-			$('.ext-bp .bp-doneList select').html(listOptions.join(''));
+			$('.ext-bp .bp-doneList').html(listOptions.join(''));
 		}
 
 		return true; //let the parent know to continue
