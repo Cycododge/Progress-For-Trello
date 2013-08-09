@@ -1,18 +1,29 @@
-Progress for Trello
-=================
+# Progress for Trello
 
-Chrome extension for Trello to get the percentage of cards and their checklists that are "done".
-
+Chrome extension that counts cards (or checklists) within each list to determine the total percentage in a user selected list.
 
 
-Chrome Install
-=================
+## Features
 
-Navigate to chrome://extensions and click "Load unpacked extension". Visit http://trello.com!
+- Choose which list to track progress on
+- Option to track checklists
+- Per board settings
+- Pre-selects lists based on title
+	- 'done'
+	- 'live'
+	- 'complete'
+	- 'finished'
+	- 'closed'
 
 
+## Chrome Install
+
+Navigate to *chrome://extensions* and click "Load unpacked extension". Visit http://trello.com!
 
 
+## Note
+
+This plug-in directly injects code into the Trello page in order to quickly and easily monitor changes to your boards.
 
 
 
