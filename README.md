@@ -16,9 +16,14 @@ Chrome extension that counts cards (or checklists) within each list to determine
 	- 'closed'
 
 
-## Chrome Install
+## Chrome Store Install
 
-Navigate to *chrome://extensions* and click "Load unpacked extension". Visit http://trello.com!
+Install from (here)[https://chrome.google.com/webstore/detail/progress-for-trello/ihneehmaifakdfpbjmneobgeifcaddbd] and stay up to date!
+
+
+## Local Install
+
+Navigate to *chrome://extensions*, enable *Developer mode*, and click "Load unpacked extension...". Visit http://trello.com!
 
 
 ## Note
