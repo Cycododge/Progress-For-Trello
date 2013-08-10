@@ -18,7 +18,8 @@ Chrome extension that counts cards (or checklists) within each list to determine
 
 ## Chrome Store Install
 
-Install from (here)[https://chrome.google.com/webstore/detail/progress-for-trello/ihneehmaifakdfpbjmneobgeifcaddbd] and stay up to date!
+Install from here and stay up to date!
+https://chrome.google.com/webstore/detail/progress-for-trello/ihneehmaifakdfpbjmneobgeifcaddbd
 
 
 ## Local Install
