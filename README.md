@@ -33,3 +33,7 @@ This plug-in directly injects code into the Trello page in order to quickly and 
 
 
 ![Screenshot](https://raw.github.com/Cycododge/Progress-For-Trello/master/resources/screenShot.png)
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Cycododge/Progress-For-Trello/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
