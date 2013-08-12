@@ -30,7 +30,3 @@ Navigate to *chrome://extensions*, enable *Developer mode*, and click "Load unpa
 ## Note
 
 This plug-in directly injects code into the Trello page in order to quickly and easily monitor changes to your boards.
-
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Cycododge/Progress-For-Trello/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
