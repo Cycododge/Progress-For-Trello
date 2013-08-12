@@ -30,3 +30,6 @@ Navigate to *chrome://extensions*, enable *Developer mode*, and click "Load unpa
 ## Note
 
 This plug-in directly injects code into the Trello page in order to quickly and easily monitor changes to your boards.
+
+
+![Screenshot](https://raw.github.com/Cycododge/Progress-For-Trello/master/resources/screenShot.png)
