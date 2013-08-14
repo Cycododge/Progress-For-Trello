@@ -3,7 +3,7 @@ AUTHOR
 	Cycododge
 
 UPDATED
-	8/8/2013
+	8/13/2013
 */
 
 (function($){
@@ -11,7 +11,7 @@ UPDATED
 
 	//initialize variables.
 	var _lists = [], _cards = [], browser = {}, bp = {}, curBoard = '', firstVisit = false,
-		injectedHTML = '<div class="ext-bp"><div class="bp-optionsIcon icon-sm icon-checklist bp-button"></div><div class="bp-barContainer"><div class="bp-progress" style="width:20%;"><span class="bp-pc">0%</span></div></div><div class="bp-settings"><div class="bp-column"><select class="bp-doneList"></select></div><div class="bp-column"><div class="bp-inputContainer"><input data-setting="countCheckLists" type="checkbox" />Track Checklists</div></div><div class="bp-saveSettings bp-button">Close</div></div></div>';
+		injectedHTML = '<div class="ext-bp"><div class="bp-optionsIcon icon-sm icon-checklist bp-button"></div><div class="bp-barContainer"><div class="bp-progress" style="width:20%;"><span class="bp-pc">0%</span></div></div><div class="bp-settings"><div class="bp-column"><select class="bp-doneList"></select></div><div class="bp-column"><div class="bp-inputContainer"><input data-setting="countCheckLists" type="checkbox" />Track Checklists</div><div class="bp-inputContainer"><input data-setting="progressOfScrum" type="checkbox" />Track Scrum Points</div></div><div class="bp-saveSettings bp-button">Close</div></div></div>';
 
 	//get the current board, then fire the script
 	var curBoardInterval = setInterval(function(){
@@ -45,10 +45,10 @@ UPDATED
 				totalComplete:0
 			},
 			user:{ //default user settings
-				progressOfCards:true, //
-				progressOfScrum:false, //count scrum points instead of cards/checklists
-				countCheckLists:(typeof browser[curBoard].countCheckLists == 'boolean' ? browser[curBoard].countCheckLists : false), //if card checklists should be counted towards total
-				rememberGlobally:false //if selected list should be appended to title
+				//count scrum points instead of cards/checklists
+				progressOfScrum:(typeof browser[curBoard].progressOfScrum == 'boolean' ? browser[curBoard].progressOfScrum : false),
+				//if card checklists should be counted towards total
+				countCheckLists:(typeof browser[curBoard].countCheckLists == 'boolean' ? browser[curBoard].countCheckLists : false)
 			},
 			sys:{ //default system settings
 				lastSelectedList:browser[curBoard].lastSelectedList || '', //id of the selected list
@@ -131,8 +131,9 @@ UPDATED
 
 	//save the settings back to the browser
 	function saveLocal(key,val){
-		browser[curBoard][key] = val;
-		localStorage.setItem('ext-bp',JSON.stringify(browser));
+		if(!curBoard){ return; } //error check
+		browser[curBoard][key] = val; //save the value locally
+		localStorage.setItem('ext-bp',JSON.stringify(browser)); //save to the browser
 	}
 
 	//load settings from the browser
@@ -159,6 +160,7 @@ UPDATED
 
 			//create the initial settings
 			$('.ext-bp input[data-setting="countCheckLists"]').prop('checked',browser[curBoard].countCheckLists);
+			$('.ext-bp input[data-setting="progressOfScrum"]').prop('checked',browser[curBoard].progressOfScrum);
 
 			//open the progress bar
 			$('.ext-bp').slideDown(continueLoad);
@@ -276,12 +278,28 @@ UPDATED
 					}
 				}
 
-				//add this card to the total
-				bp.math.totalCards += numCheckLists || 1;
+				//count scrum points
+				if(bp.user.progressOfScrum){
+					//determine points on the card from title
+					var cardPoints = Number((_cards[cardID].attributes.name.match(/\([0-9.]+(?=\))/gi) || ['(0'])[0].split('(')[1]);
 
-				//if this card is in the "done" list
-				if(listID == bp.sys.lastSelectedList){
-					bp.math.totalComplete += numCheckLists || 1; //count towards complete
+					//add these points to the total
+					bp.math.totalCards += cardPoints;
+
+					//if this card is in the "done" list
+					if(listID == bp.sys.lastSelectedList){
+						bp.math.totalComplete += cardPoints; //count towards complete
+					}
+				}
+				//count the cards
+				else{
+					//add this card to the total
+					bp.math.totalCards += numCheckLists || 1;
+
+					//if this card is in the "done" list
+					if(listID == bp.sys.lastSelectedList){
+						bp.math.totalComplete += numCheckLists || 1; //count towards complete
+					}
 				}
 			}
 		}
