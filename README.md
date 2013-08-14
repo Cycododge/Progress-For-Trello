@@ -1,12 +1,13 @@
 # Progress for Trello
 
-Chrome extension that counts cards (or checklists) within each list to determine the total percentage in a user selected list.
+Track the overall completion of your Trello-based project with this Chrome extension, by counting cards or scrum points!
 
 
 ## Features
 
 - Choose which list to track progress on
 - Option to track checklists
+- Option to track scrum points
 - Per board settings
 - Pre-selects lists based on title
 	- 'done'
