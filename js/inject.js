@@ -3,14 +3,14 @@ AUTHOR
 	Cycododge
 
 UPDATED
-	8/8/2013
+	8/15/2013
 
 PURPOSE
 	Injects script into DOM for access to page variables
 */
 
 /* IMMEDIATE */
-//intializes the script when the page is ready
+//initializes the script when the page is ready
 var readyStateCheckInterval = setInterval(function() {
 	if (document.readyState === "complete") {
 		clearInterval(readyStateCheckInterval);

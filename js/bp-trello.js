@@ -11,7 +11,29 @@ UPDATED
 
 	//initialize variables.
 	var _lists = [], _cards = [], browser = {}, bp = {}, curBoard = '', firstVisit = false,
-		injectedHTML = '<div class="ext-bp"><div class="bp-optionsIcon icon-sm icon-checklist bp-button"></div><div class="bp-barContainer"><div class="bp-progress" style="width:20%;"><span class="bp-pc">0%</span></div></div><div class="bp-settings"><div class="bp-column"><select class="bp-doneList"></select></div><div class="bp-column"><div class="bp-inputContainer"><input data-setting="countCheckLists" type="checkbox" />Track Checklists</div><div class="bp-inputContainer"><input data-setting="countCheckListsTowardsComplete" type="checkbox" />Track Only Completed Items</div><div class="bp-inputContainer"><input data-setting="progressOfScrum" type="checkbox" />Track Scrum Points</div></div><div class="bp-saveSettings bp-button">Close</div></div></div>';
+		injectedHTML = '<div class="ext-bp">'+
+			'<div class="bp-optionsIcon icon-sm icon-checklist bp-button"></div>'+
+				'<div class="bp-barContainer">'+
+					'<div class="bp-progress" style="width:20%;">'+
+						'<span class="bp-pc">0%</span>'+
+					'</div>'+
+				'</div>'+
+				'<div class="bp-settings">'+
+					'<div class="bp-column"><select class="bp-doneList"></select></div>'+
+					'<div class="bp-column">'+
+						'<div class="bp-inputContainer">'+
+							'<input data-setting="countCheckLists" type="checkbox" />Track Checklists'+
+						'</div>'+
+						'<div class="bp-inputContainer">'+
+							'<input data-setting="countCheckListsTowardsComplete" type="checkbox" />Track Checklist Item'+
+						'</div>'+
+						'<div class="bp-inputContainer">'+
+							'<input data-setting="progressOfScrum" type="checkbox" />Track Scrum Points'+
+						'</div>'+
+					'</div>'+
+					'<div class="bp-saveSettings bp-button">Close</div>'+
+				'</div>'+
+			'</div>';
 
 	//get the current board, then fire the script
 	var curBoardInterval = setInterval(function(){
@@ -324,6 +346,9 @@ UPDATED
 
 					//track total points toMax (ex 10)
 					toMax = cardPoints;
+
+					//if inComplete, count all towards complete
+					if(inComplete){ toComplete = cardPoints; }
 				}
 				//or track cards
 				else{
