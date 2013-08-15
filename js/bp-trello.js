@@ -3,7 +3,7 @@ AUTHOR
 	Cycododge
 
 UPDATED
-	8/14/2013
+	8/15/2013
 */
 
 (function($){
@@ -272,8 +272,6 @@ UPDATED
 				if(_cards[cardID].attributes.idList != listID){ continue; } //skip if the card doesn't belong to this list
 				if(_cards[cardID].view.el.className.indexOf('hide') >= 0){ continue; } //skip if hidden
 
-				// =============NEW CODE=================
-
 				//track card worth and location
 				var inComplete = false, toComplete = 0, toMax = 0;
 
@@ -312,12 +310,20 @@ UPDATED
 				/* UPDATE TRACKERS */
 				//track scrum points
 				if(bp.user.progressOfScrum){
+					//determine the number of points on the card
 					var cardPoints = Number((_cards[cardID].attributes.name.match(/\([0-9.]+(?=\))/gi) || ['(0'])[0].split('(')[1]);
-					//some math here for checklists as percentage of scrum points+
-					//track point toMax (ex 10)
-					toMax += cardPoints;
 
-					//if inComplete, add (ex 10) to toComplete
+					//if this card has points AND checklists were found
+					if(cardPoints && toMax){
+						//find number of points complete with a percentage, replace toComplete
+						toComplete = cardPoints * (toComplete / toMax);
+					}else{
+						//if inComplete, add (ex 10) to toComplete //else reset in case checklist are counted
+						if(inComplete){ toComplete = cardPoints; }else{ toComplete = 0; }
+					}
+
+					//track total points toMax (ex 10)
+					toMax = cardPoints;
 				}
 				//or track cards
 				else{
@@ -332,54 +338,7 @@ UPDATED
 				}
 
 				bp.math.progressMax += toMax; //add toMax to global
-				if(inComplete){ bp.math.progressComplete += toComplete; } //add toComplete to global
-
-
-				// =============NEW CODE=================
-
-				//if allowed, count checklists for this card
-				// var numCheckLists = 0;
-				// if(bp.user.countCheckLists){
-				// 	//loops through available checklists
-				// 	for(var i = 0, ii = _cards[cardID].checklistList.length; i < ii; i++){
-				// 		//count the number of checklist items towards total
-				// 		numCheckLists += _cards[cardID].checklistList.models[i].attributes.checkItems.length;
-
-				// 		//if counting checked items towards total regardless of list
-				// 		if(bp.user.countCheckListsTowardsComplete){
-				// 			//loop through each checklist item on this list
-				// 			var checklistItem = _cards[cardID].checklistList.models[i].attributes.checkItems;
-				// 			for(var a = 0, aa = checklistItem.length; a < aa; a++){
-				// 				//check status
-				// 				if(checklistItem[a].state == 'complete'){ bp.math.progressComplete++; }
-				// 			}
-				// 		}
-				// 	}
-				// }
-
-				//count scrum points
-				// if(bp.user.progressOfScrum){
-				// 	//determine points on the card from title
-				// 	var cardPoints = Number((_cards[cardID].attributes.name.match(/\([0-9.]+(?=\))/gi) || ['(0'])[0].split('(')[1]);
-
-				// 	//add these points to the total
-				// 	bp.math.progressMax += cardPoints;
-
-				// 	//if this card is in the "done" list
-				// 	if(listID == bp.sys.lastSelectedList){
-				// 		bp.math.progressComplete += cardPoints; //count towards complete
-				// 	}
-				// }
-				//count the cards
-				// else{
-				// 	//add this card to the total
-				// 	bp.math.progressMax += numCheckLists || 1;
-
-				// 	//if this card is in the "done" list
-				// 	if(listID == bp.sys.lastSelectedList){
-				// 		bp.math.progressComplete += numCheckLists || 1; //count towards complete
-				// 	}
-				// }
+				bp.math.progressComplete += toComplete; //add toComplete to global
 			}
 		}
 
@@ -389,14 +348,17 @@ UPDATED
 
 	//update the progress bar
 	function updateProgress(){
-		//check if there are any cards
-		var newPercent = 0;
-		if(bp.math.progressMax){
-			//determine percentage
-			newPercent = Math.round((bp.math.progressComplete / bp.math.progressMax) * 100);
+		//if total is 0, show 100% completion
+		if(!bp.math.progressMax){
+			bp.math.progressComplete = 1;
+			bp.math.progressMax = 1;
 		}
 
-		//don't update if nothing changed
+		//determine new percentage
+		var newPercent = 0;
+		newPercent = Math.round((bp.math.progressComplete / bp.math.progressMax) * 100);
+
+		//don't update if nothing changed from last time
 		if(bp.percentageComplete == newPercent){ return; }
 
 		//update the global var
