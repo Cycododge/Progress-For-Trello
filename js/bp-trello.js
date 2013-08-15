@@ -3,7 +3,7 @@ AUTHOR
 	Cycododge
 
 UPDATED
-	8/13/2013
+	8/14/2013
 */
 
 (function($){
@@ -11,7 +11,7 @@ UPDATED
 
 	//initialize variables.
 	var _lists = [], _cards = [], browser = {}, bp = {}, curBoard = '', firstVisit = false,
-		injectedHTML = '<div class="ext-bp"><div class="bp-optionsIcon icon-sm icon-checklist bp-button"></div><div class="bp-barContainer"><div class="bp-progress" style="width:20%;"><span class="bp-pc">0%</span></div></div><div class="bp-settings"><div class="bp-column"><select class="bp-doneList"></select></div><div class="bp-column"><div class="bp-inputContainer"><input data-setting="countCheckLists" type="checkbox" />Track Checklists</div><div class="bp-inputContainer"><input data-setting="progressOfScrum" type="checkbox" />Track Scrum Points</div></div><div class="bp-saveSettings bp-button">Close</div></div></div>';
+		injectedHTML = '<div class="ext-bp"><div class="bp-optionsIcon icon-sm icon-checklist bp-button"></div><div class="bp-barContainer"><div class="bp-progress" style="width:20%;"><span class="bp-pc">0%</span></div></div><div class="bp-settings"><div class="bp-column"><select class="bp-doneList"></select></div><div class="bp-column"><div class="bp-inputContainer"><input data-setting="countCheckLists" type="checkbox" />Track Checklists</div><div class="bp-inputContainer"><input data-setting="countCheckListsTowardsComplete" type="checkbox" />Track Only Completed Items</div><div class="bp-inputContainer"><input data-setting="progressOfScrum" type="checkbox" />Track Scrum Points</div></div><div class="bp-saveSettings bp-button">Close</div></div></div>';
 
 	//get the current board, then fire the script
 	var curBoardInterval = setInterval(function(){
@@ -40,15 +40,18 @@ UPDATED
 
 		//give back the refreshed settings
 		return {
-			math:{ //the current board status with demo structure
-				totalCards:0,
-				totalComplete:0
+			math:{
+				progressMax:0,
+				progressComplete:0
 			},
 			user:{ //default user settings
 				//count scrum points instead of cards/checklists
 				progressOfScrum:(typeof browser[curBoard].progressOfScrum == 'boolean' ? browser[curBoard].progressOfScrum : false),
 				//if card checklists should be counted towards total
-				countCheckLists:(typeof browser[curBoard].countCheckLists == 'boolean' ? browser[curBoard].countCheckLists : false)
+				countCheckLists:(typeof browser[curBoard].countCheckLists == 'boolean' ? browser[curBoard].countCheckLists : false),
+				//if completed checklist items should be tracked towards the total
+				countCheckListsTowardsComplete:(typeof browser[curBoard].countCheckListsTowardsComplete == 'boolean' ? browser[curBoard].countCheckListsTowardsComplete : false)
+
 			},
 			sys:{ //default system settings
 				lastSelectedList:browser[curBoard].lastSelectedList || '', //id of the selected list
@@ -159,8 +162,9 @@ UPDATED
 			$('#board-header').after(injectedHTML); //add html to the page
 
 			//create the initial settings
-			$('.ext-bp input[data-setting="countCheckLists"]').prop('checked',browser[curBoard].countCheckLists);
 			$('.ext-bp input[data-setting="progressOfScrum"]').prop('checked',browser[curBoard].progressOfScrum);
+			$('.ext-bp input[data-setting="countCheckLists"]').prop('checked',browser[curBoard].countCheckLists);
+			$('.ext-bp input[data-setting="countCheckListsTowardsComplete"]').prop('checked',browser[curBoard].countCheckListsTowardsComplete);
 
 			//open the progress bar
 			$('.ext-bp').slideDown(continueLoad);
@@ -248,8 +252,8 @@ UPDATED
 	//refresh the data from the board
 	function loadData(){
 		//reset
-		bp.math.totalCards = 0;
-		bp.math.totalComplete = 0;
+		bp.math.progressMax = 0;
+		bp.math.progressComplete = 0;
 		_lists = ModelCache._cache.List;
 		_cards = ModelCache._cache.Card;
 
@@ -268,39 +272,114 @@ UPDATED
 				if(_cards[cardID].attributes.idList != listID){ continue; } //skip if the card doesn't belong to this list
 				if(_cards[cardID].view.el.className.indexOf('hide') >= 0){ continue; } //skip if hidden
 
-				//if allowed count checklists for this card
-				var numCheckLists = 0;
+				// =============NEW CODE=================
+
+				//track card worth and location
+				var inComplete = false, toComplete = 0, toMax = 0;
+
+				//detect if in "complete" list
+				inComplete = (listID == bp.sys.lastSelectedList);
+
+				//count checklists?
 				if(bp.user.countCheckLists){
-					//loops through available checklists
+					//loop through each checklist for this card
 					for(var i = 0, ii = _cards[cardID].checklistList.length; i < ii; i++){
-						//count the number of checklist items towards total
-						numCheckLists += _cards[cardID].checklistList.models[i].attributes.checkItems.length;
+						var checklistItems = _cards[cardID].checklistList.models[i].attributes.checkItems; //cache
+
+						//count items toComplete?
+						if(bp.user.countCheckListsTowardsComplete){
+						//yes
+							//loop through each checklist item
+							for(var a = 0, aa = checklistItems.length; a < aa; a++){
+								//toMax + 1
+								toMax++;
+
+								//if item is checked, toComplete
+								if(checklistItems[a].state == 'complete'){ toComplete++; }
+							}
+						}
+						//no
+						else{
+							//track total toMax (ex 10)
+							toMax += checklistItems.length;
+
+							//if inComplete, track (ex 10) toComplete
+							if(inComplete){ toComplete += checklistItems.length; }
+						}
 					}
 				}
+
+				/* UPDATE TRACKERS */
+				//track scrum points
+				if(bp.user.progressOfScrum){
+					var cardPoints = Number((_cards[cardID].attributes.name.match(/\([0-9.]+(?=\))/gi) || ['(0'])[0].split('(')[1]);
+					//some math here for checklists as percentage of scrum points+
+					//track point toMax (ex 10)
+					toMax += cardPoints;
+
+					//if inComplete, add (ex 10) to toComplete
+				}
+				//or track cards
+				else{
+					//if card not counted via checklists already
+					if(!toMax){
+						//track 1 toMax
+						toMax++;
+
+						//if inComplete, add 1 to toComplete
+						if(inComplete){ toComplete++; }
+					}
+				}
+
+				bp.math.progressMax += toMax; //add toMax to global
+				if(inComplete){ bp.math.progressComplete += toComplete; } //add toComplete to global
+
+
+				// =============NEW CODE=================
+
+				//if allowed, count checklists for this card
+				// var numCheckLists = 0;
+				// if(bp.user.countCheckLists){
+				// 	//loops through available checklists
+				// 	for(var i = 0, ii = _cards[cardID].checklistList.length; i < ii; i++){
+				// 		//count the number of checklist items towards total
+				// 		numCheckLists += _cards[cardID].checklistList.models[i].attributes.checkItems.length;
+
+				// 		//if counting checked items towards total regardless of list
+				// 		if(bp.user.countCheckListsTowardsComplete){
+				// 			//loop through each checklist item on this list
+				// 			var checklistItem = _cards[cardID].checklistList.models[i].attributes.checkItems;
+				// 			for(var a = 0, aa = checklistItem.length; a < aa; a++){
+				// 				//check status
+				// 				if(checklistItem[a].state == 'complete'){ bp.math.progressComplete++; }
+				// 			}
+				// 		}
+				// 	}
+				// }
 
 				//count scrum points
-				if(bp.user.progressOfScrum){
-					//determine points on the card from title
-					var cardPoints = Number((_cards[cardID].attributes.name.match(/\([0-9.]+(?=\))/gi) || ['(0'])[0].split('(')[1]);
+				// if(bp.user.progressOfScrum){
+				// 	//determine points on the card from title
+				// 	var cardPoints = Number((_cards[cardID].attributes.name.match(/\([0-9.]+(?=\))/gi) || ['(0'])[0].split('(')[1]);
 
-					//add these points to the total
-					bp.math.totalCards += cardPoints;
+				// 	//add these points to the total
+				// 	bp.math.progressMax += cardPoints;
 
-					//if this card is in the "done" list
-					if(listID == bp.sys.lastSelectedList){
-						bp.math.totalComplete += cardPoints; //count towards complete
-					}
-				}
+				// 	//if this card is in the "done" list
+				// 	if(listID == bp.sys.lastSelectedList){
+				// 		bp.math.progressComplete += cardPoints; //count towards complete
+				// 	}
+				// }
 				//count the cards
-				else{
-					//add this card to the total
-					bp.math.totalCards += numCheckLists || 1;
+				// else{
+				// 	//add this card to the total
+				// 	bp.math.progressMax += numCheckLists || 1;
 
-					//if this card is in the "done" list
-					if(listID == bp.sys.lastSelectedList){
-						bp.math.totalComplete += numCheckLists || 1; //count towards complete
-					}
-				}
+				// 	//if this card is in the "done" list
+				// 	if(listID == bp.sys.lastSelectedList){
+				// 		bp.math.progressComplete += numCheckLists || 1; //count towards complete
+				// 	}
+				// }
 			}
 		}
 
@@ -312,9 +391,9 @@ UPDATED
 	function updateProgress(){
 		//check if there are any cards
 		var newPercent = 0;
-		if(bp.math.totalCards){
+		if(bp.math.progressMax){
 			//determine percentage
-			newPercent = Math.round((bp.math.totalComplete / bp.math.totalCards) * 100);
+			newPercent = Math.round((bp.math.progressComplete / bp.math.progressMax) * 100);
 		}
 
 		//don't update if nothing changed
