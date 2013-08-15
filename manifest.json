@@ -1,6 +1,6 @@
 {
 	"name": "Progress for Trello",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"manifest_version": 2,
 	"description": "Counts cards (or checklists) within each list to determine the total percentage in a user selected list.",
 	"homepage_url": "http://cycododge.com",

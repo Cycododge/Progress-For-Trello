@@ -7,6 +7,7 @@ Track the overall completion of your Trello-based project with this Chrome exten
 
 - Choose which list to track progress on
 - Option to track checklists
+	- Option to track checklist items
 - Option to track scrum points
 - Per board settings
 - Pre-selects lists based on title
