@@ -8,11 +8,12 @@
 .ext-bp .bp-pc { cursor: default; display: inline-block; margin: 1px 0 0 5px; color: #fff; text-shadow: 2px 2px 2px #000; }
 
 /* SETTINGS */
-.ext-bp .bp-settings { margin: 0 0 8px 26px; display: none; }
+.ext-bp .bp-settings { margin: 0 0 8px 26px; display: none; position: relative; }
 .ext-bp .bp-button { box-shadow: 0 1px 1px #777 inset, 0 1px 0 #777; background-color: #ddd; border: 1px solid #222; border-radius: 4px; color: #555; }
-.ext-bp .bp-button:hover,.ext-bp .bp-optionsIcon.bp-active { cursor: pointer; color: #000; background-color: lightgreen; }
+.ext-bp .bp-button:hover,.ext-bp .bp-active { cursor: pointer; color: #000; background-color: lightgreen; }
 .ext-bp .bp-optionsIcon { width: 20px; padding-top: 1px; display: inline-block; margin: 0 4px 6px 0; }
 .ext-bp .bp-doneList { display: inline-block; margin-right: 20px; }
-.ext-bp .bp-saveSettings { float: right; padding: 1px 4px; }
+.ext-bp .bp-saveSettings { padding: 1px 4px; position: absolute; right: 0; bottom: 0; }
 .ext-bp .bp-column { display:inline-block; vertical-align: top; }
 .ext-bp .bp-inputContainer { margin-top: 2px; }
+.ext-bp .bp-version { position: absolute; top: -5px; right: 0; font-size: 65%; color: #777; }

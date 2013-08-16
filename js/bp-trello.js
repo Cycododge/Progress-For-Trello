@@ -10,7 +10,7 @@ UPDATED
 	/* "GLOBAL" VARS */
 
 	//initialize variables.
-	var _lists = [], _cards = [], browser = {}, bp = {}, curBoard = '', firstVisit = false,
+	var releaseVersion = '1.1.0', _lists = [], _cards = [], browser = {}, bp = {}, curBoard = '', firstVisit = false,
 		injectedHTML = '<div class="ext-bp">'+
 			'<div class="bp-optionsIcon icon-sm icon-checklist bp-button"></div>'+
 				'<div class="bp-barContainer">'+
@@ -31,6 +31,7 @@ UPDATED
 							'<input data-setting="progressOfScrum" type="checkbox" />Track Scrum Points'+
 						'</div>'+
 					'</div>'+
+					'<div class="bp-version">v'+releaseVersion+'</div>'+
 					'<div class="bp-saveSettings bp-button">Close</div>'+
 				'</div>'+
 			'</div>';
