@@ -18,3 +18,4 @@
 .ext-bp .bp-column { display:inline-block; vertical-align: top; }
 .ext-bp .bp-inputContainer { margin-top: 2px; }
 .ext-bp .bp-version { position: absolute; top: -5px; right: 10px; font-size: 65%; color: #777; }
+.ext-bp .bp-settings select, .ext-bp .bp-settings input { cursor: pointer; }
