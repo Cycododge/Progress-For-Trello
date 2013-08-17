@@ -1,4 +1,4 @@
-/* UDPATED 8/15/2013 */
+/* UDPATED 8/16/2013 */
 .ext-bp { padding-left: 5px; }
 .ext-bp select, .ext-bp input { margin: 0 5px 0 0; padding: 0; min-height: 0; }
 
@@ -19,3 +19,6 @@
 .ext-bp .bp-inputContainer { margin-top: 2px; }
 .ext-bp .bp-version { position: absolute; top: -5px; right: 10px; font-size: 65%; color: #777; }
 .ext-bp .bp-settings select, .ext-bp .bp-settings input { cursor: pointer; }
+.ext-bp .bp-settings input[type="radio"] { margin-left: 5px; }
+.ext-bp .bp-settings .bp-title { font-weight: bold; }
+.ext-bp .bp-settings label { display: inline-block; font-weight: normal; margin-left: 5px; cursor: pointer; }

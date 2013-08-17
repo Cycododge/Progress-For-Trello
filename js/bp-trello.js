@@ -22,13 +22,17 @@ UPDATED
 					'<div class="bp-column"><select class="bp-doneList"></select></div>'+
 					'<div class="bp-column">'+
 						'<div class="bp-inputContainer">'+
+							'<span class="bp-title">Track:</span>'+
+							'<label for="bp-cards">Cards</label>'+
+							'<input value="false" name="bp-tracking" data-setting="tracking" id="bp-cards" type="radio" />'+
+							'<label for="bp-points">Points</label>'+
+							'<input value="true" name="bp-tracking" data-setting="tracking" id="bp-points" type="radio" />'+
+						'</div>'+
+						'<div class="bp-inputContainer">'+
 							'<input data-setting="countCheckLists" type="checkbox" />Track Checklists'+
 						'</div>'+
 						'<div class="bp-inputContainer">'+
-							'<input data-setting="countCheckListsTowardsComplete" type="checkbox" />Track Checklist Item'+
-						'</div>'+
-						'<div class="bp-inputContainer">'+
-							'<input data-setting="progressOfScrum" type="checkbox" />Track Scrum Points'+
+							'<input data-setting="countCheckListsTowardsComplete" type="checkbox" />Track Checklist Items'+
 						'</div>'+
 					'</div>'+
 					'<div class="bp-version">v'+releaseVersion+'</div>'+
@@ -69,7 +73,7 @@ UPDATED
 			},
 			user:{ //default user settings
 				//count scrum points instead of cards/checklists
-				progressOfScrum:(typeof browser[curBoard].progressOfScrum == 'boolean' ? browser[curBoard].progressOfScrum : false),
+				tracking:browser[curBoard].tracking || 'false',
 				//if card checklists should be counted towards total
 				countCheckLists:(typeof browser[curBoard].countCheckLists == 'boolean' ? browser[curBoard].countCheckLists : false),
 				//if completed checklist items should be tracked towards the total
@@ -96,7 +100,18 @@ UPDATED
 		injectUI(); //initial call
 		setInterval(injectUI,bp.sys.refreshTime);
 
-		//update settings as they are checked
+		//settings: track status of radio buttons
+		$('body').on('change','.ext-bp .bp-settings input[type="radio"]',function(){
+			var $this = $(this),
+				group = $this.prop('name'), //get the group name
+				selected = $this.parent().find('input[name="'+group+'"]:checked'), //find the checked item in the group
+				setting = $this.data('setting'); //get the setting name
+
+			bp.user[setting] = selected.val(); //save the radio value to the local settings
+			saveLocal(setting,bp.user[setting]); //save the radio value to the browser settings
+		});
+
+		//settings: track status of checkboxes
 		$('body').on('change','.ext-bp .bp-settings input[type="checkbox"]',function(){
 			//save the new status
 			var setting = $(this).data('setting');
@@ -185,7 +200,7 @@ UPDATED
 			$('#board-header').after(injectedHTML); //add html to the page
 
 			//create the initial settings
-			$('.ext-bp input[data-setting="progressOfScrum"]').prop('checked',browser[curBoard].progressOfScrum);
+			$('.ext-bp input[data-setting="tracking"][value="'+(browser[curBoard].tracking || 'false')+'"]').prop('checked',true);
 			$('.ext-bp input[data-setting="countCheckLists"]').prop('checked',browser[curBoard].countCheckLists);
 			$('.ext-bp input[data-setting="countCheckListsTowardsComplete"]').prop('checked',browser[curBoard].countCheckListsTowardsComplete);
 
@@ -332,7 +347,7 @@ UPDATED
 
 				/* UPDATE TRACKERS */
 				//track scrum points
-				if(bp.user.progressOfScrum){
+				if(bp.user.tracking == 'true'){
 					//determine the number of points on the card
 					var cardPoints = Number((_cards[cardID].attributes.name.match(/\([0-9.]+(?=\))/gi) || ['(0'])[0].split('(')[1]);
 
