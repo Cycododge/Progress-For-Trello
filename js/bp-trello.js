@@ -118,15 +118,47 @@ UPDATED
 			saveLocal(setting,bp.user[setting]); //save to the browser
 		});
 
+		//special condition for counting checklist items setting
+		$('body').on('change','.ext-bp .bp-settings input[data-setting="countCheckListsTowardsComplete"]',function(){
+			//if tracking points
+			if(bp.user.tracking == 'true'){
+				//if not already clicked
+				if(!$('.ext-bp input[data-setting="countCheckListsTowardsComplete"]').prop('checked')){
+					//auto-uncheck tracking checklist items
+					$('.ext-bp input[data-setting="countCheckLists"]').click();
+				}
+			}
+		});
+
 		//special condition for counting checklist setting
 		$('body').on('change','.ext-bp .bp-settings input[data-setting="countCheckLists"]',function(){
 			//if checked
 			if($(this).prop('checked')){
 				//show option for checklist items
 				$('.ext-bp input[data-setting="countCheckListsTowardsComplete"]').parent().slideDown();
+
+				//check if counting points
+				if(bp.user.tracking == 'true'){
+					//if not already checked
+					if(!$('.ext-bp input[data-setting="countCheckListsTowardsComplete"]').prop('checked')){
+						//force counting checklist items
+						$('.ext-bp input[data-setting="countCheckListsTowardsComplete"]').click();
+					}
+				}
 			}else{
 				//hide option for checklist items
 				$('.ext-bp input[data-setting="countCheckListsTowardsComplete"]').parent().slideUp();
+			}
+		});
+
+		//special condition for switching between counting cards and points
+		$('body').on('change','.ext-bp .bp-settings input[data-setting="tracking"]',function(){
+			//if tracking points
+			if($(this).prop('id') == 'bp-points'){
+				//disable the input for tracking completed items
+				if(!$('.ext-bp input[data-setting="countCheckListsTowardsComplete"]').prop('checked')){
+					$('.ext-bp input[data-setting="countCheckListsTowardsComplete"]').click();
+				}
 			}
 		});
 
