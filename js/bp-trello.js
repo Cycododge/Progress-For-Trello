@@ -31,8 +31,8 @@ UPDATED
 						'<div class="bp-inputContainer">'+
 							'<input data-setting="countCheckLists" class="bp-indent" type="checkbox" />Track Checklists'+
 						'</div>'+
-						'<div class="bp-inputContainer">'+
-							'<input data-setting="countCheckListsTowardsComplete" class="bp-indent" type="checkbox" />Track Checklist Items'+
+						'<div class="bp-inputContainer countCheckListsTowardsComplete">'+
+							'<input data-setting="countCheckListsTowardsComplete" class="bp-indentLevel2" type="checkbox" />Track Completed Items'+
 						'</div>'+
 					'</div>'+
 					'<div class="bp-version">v'+releaseVersion+'</div>'+
@@ -78,7 +78,6 @@ UPDATED
 				countCheckLists:(typeof browser[curBoard].countCheckLists == 'boolean' ? browser[curBoard].countCheckLists : false),
 				//if completed checklist items should be tracked towards the total
 				countCheckListsTowardsComplete:(typeof browser[curBoard].countCheckListsTowardsComplete == 'boolean' ? browser[curBoard].countCheckListsTowardsComplete : false)
-
 			},
 			sys:{ //default system settings
 				lastSelectedList:browser[curBoard].lastSelectedList || '', //id of the selected list
@@ -117,6 +116,18 @@ UPDATED
 			var setting = $(this).data('setting');
 			bp.user[setting] = $(this).prop('checked');
 			saveLocal(setting,bp.user[setting]); //save to the browser
+		});
+
+		//special condition for counting checklist setting
+		$('body').on('change','.ext-bp .bp-settings input[data-setting="countCheckLists"]',function(){
+			//if checked
+			if($(this).prop('checked')){
+				//show option for checklist items
+				$('.ext-bp input[data-setting="countCheckListsTowardsComplete"]').parent().slideDown();
+			}else{
+				//hide option for checklist items
+				$('.ext-bp input[data-setting="countCheckListsTowardsComplete"]').parent().slideUp();
+			}
 		});
 
 		//reload when the done list setting is changed
@@ -199,10 +210,15 @@ UPDATED
 		if(!document.getElementsByClassName('ext-bp').length){
 			$('#board-header').after(injectedHTML); //add html to the page
 
-			//create the initial settings
+			/* CREATE THE INITIAL SETTINGS */
+			//determine tracking
 			$('.ext-bp input[data-setting="tracking"][value="'+(browser[curBoard].tracking || 'false')+'"]').prop('checked',true);
+			//counting checklist
 			$('.ext-bp input[data-setting="countCheckLists"]').prop('checked',browser[curBoard].countCheckLists);
+			//counting checklist items
 			$('.ext-bp input[data-setting="countCheckListsTowardsComplete"]').prop('checked',browser[curBoard].countCheckListsTowardsComplete);
+			//if checklist items should be shown
+			if(browser[curBoard].countCheckLists){ $('.ext-bp input[data-setting="countCheckListsTowardsComplete"]').parent().slideDown(); }
 
 			//open the progress bar
 			$('.ext-bp').slideDown(continueLoad);
