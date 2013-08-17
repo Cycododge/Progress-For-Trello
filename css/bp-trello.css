@@ -22,3 +22,4 @@
 .ext-bp .bp-settings input[type="radio"] { margin-left: 5px; }
 .ext-bp .bp-settings .bp-title { font-weight: bold; }
 .ext-bp .bp-settings label { display: inline-block; font-weight: normal; margin-left: 5px; cursor: pointer; }
+.ext-bp .bp-settings .bp-indent { margin-left: 24px; }

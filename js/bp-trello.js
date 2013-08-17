@@ -29,10 +29,10 @@ UPDATED
 							'<input value="true" name="bp-tracking" data-setting="tracking" id="bp-points" type="radio" />'+
 						'</div>'+
 						'<div class="bp-inputContainer">'+
-							'<input data-setting="countCheckLists" type="checkbox" />Track Checklists'+
+							'<input data-setting="countCheckLists" class="bp-indent" type="checkbox" />Track Checklists'+
 						'</div>'+
 						'<div class="bp-inputContainer">'+
-							'<input data-setting="countCheckListsTowardsComplete" type="checkbox" />Track Checklist Items'+
+							'<input data-setting="countCheckListsTowardsComplete" class="bp-indent" type="checkbox" />Track Checklist Items'+
 						'</div>'+
 					'</div>'+
 					'<div class="bp-version">v'+releaseVersion+'</div>'+
