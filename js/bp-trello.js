@@ -142,7 +142,7 @@ UPDATED
 			if(!$this.hasClass('bp-active')){
 				bp.sys.settingsOpen = true; //update script
 				$this.addClass('bp-active'); //mark as open
-				$('.ext-bp .bp-settings').slideDown(); //open the menu
+				$('.ext-bp .bp-settings').slideDown('fast'); //open the menu
 			}else{
 				bp.sys.settingsOpen = false; //update script
 				$this.removeClass('bp-active'); //remove mark
