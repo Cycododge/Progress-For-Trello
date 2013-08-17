@@ -1,4 +1,4 @@
-/* UDPATED 8/8/2013 */
+/* UDPATED 8/15/2013 */
 .ext-bp { padding-left: 5px; }
 .ext-bp select, .ext-bp input { margin: 0 5px 0 0; padding: 0; min-height: 0; }
 
@@ -8,7 +8,8 @@
 .ext-bp .bp-pc { cursor: default; display: inline-block; margin: 1px 0 0 5px; color: #fff; text-shadow: 2px 2px 2px #000; }
 
 /* SETTINGS */
-.ext-bp .bp-settings { margin-left: 10px; display: none; position: absolute; z-index: 1; background-color: #f0f0f0; padding: 5px; border-radius: 0 0 5px 5px; box-shadow: 0 3px 3px #555; opacity: 0.95; }
+.ext-bp .bp-settings { margin-left: 10px; display: none; position: absolute; z-index: 1; background-color: #f0f0f0; padding: 5px; border-radius: 0 0 5px 5px; box-shadow: 0 3px 3px #555; opacity: 0.95; transition: opacity .75s ease-in-out; }
+.ext-bp .bp-settings:hover { opacity:1; transition: opacity .25s ease-in-out; }
 .ext-bp .bp-button { box-shadow: 0 1px 1px #777 inset, 0 1px 0 #777; background-color: #ddd; border: 1px solid #222; border-radius: 4px; color: #555; }
 .ext-bp .bp-button:hover,.ext-bp .bp-active { cursor: pointer; color: #000; background-color: lightgreen; }
 .ext-bp .bp-optionsIcon { width: 20px; padding-top: 1px; display: inline-block; margin: 0 4px 6px 0; }

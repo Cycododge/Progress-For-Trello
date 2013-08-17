@@ -3,7 +3,7 @@ AUTHOR
 	Cycododge
 
 UPDATED
-	8/15/2013
+	8/16/2013
 */
 
 (function($){
