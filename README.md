@@ -1,13 +1,13 @@
-# Progress for Trello
+# Progress for Trello v1.1.0
 
-Track the overall completion of your Trello-based project with this Chrome extension, by counting cards or scrum points!
+Track the overall completion of your Trello-based project with this Chrome extension, by counting cards or scrum points.
 
 
 ## Features
 
 - Choose which list to track progress on
 - Option to track checklists
-	- Option to track checklist items
+	- Option to track completed items
 - Option to track scrum points
 - Per board settings
 - Pre-selects lists based on title
@@ -20,13 +20,17 @@ Track the overall completion of your Trello-based project with this Chrome exten
 
 ## Chrome Store Install
 
-Install from here and stay up to date!
-https://chrome.google.com/webstore/detail/progress-for-trello/ihneehmaifakdfpbjmneobgeifcaddbd
+Install from [here](https://chrome.google.com/webstore/detail/progress-for-trello/ihneehmaifakdfpbjmneobgeifcaddbd) and stay up to date!
 
 
 ## Local Install
 
 Navigate to *chrome://extensions*, enable *Developer mode*, and click "Load unpacked extension...". Visit http://trello.com!
+
+
+## Trello Development Board
+
+Be a part of the progress [here](https://trello.com/b/0QkitWlZ/progress-for-trello).
 
 
 ## Note

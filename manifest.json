@@ -2,8 +2,8 @@
 	"name": "Progress for Trello",
 	"version": "1.1.0",
 	"manifest_version": 2,
-	"description": "Counts cards (or checklists) within each list to determine the total percentage in a user selected list.",
-	"homepage_url": "http://cycododge.com",
+	"description": "Track the overall completion of your Trello-based project with this Chrome extension, by counting cards or scrum points.",
+	"homepage_url": "http://cycododge.com/projects",
 	"icons": {
 		"16": "icons/icon16.png",
 		"48": "icons/icon48.png",
