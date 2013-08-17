@@ -14,7 +14,7 @@ UPDATED
 		injectedHTML = '<div class="ext-bp">'+
 			'<div class="bp-optionsIcon icon-sm icon-checklist bp-button"></div>'+
 				'<div class="bp-barContainer">'+
-					'<div class="bp-progress" style="width:20%;">'+
+					'<div class="bp-progress" style="width:0%;">'+
 						'<span class="bp-pc">0%</span>'+
 					'</div>'+
 				'</div>'+
