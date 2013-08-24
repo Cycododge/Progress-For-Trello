@@ -445,7 +445,7 @@ UPDATED
 
 		//determine new percentage
 		var newPercent = 0;
-		newPercent = Math.round((bp.math.progressComplete / bp.math.progressMax) * 100);
+		newPercent = Math.floor((bp.math.progressComplete / bp.math.progressMax) * 100);
 
 		//don't update if nothing changed from last time
 		if(bp.percentageComplete == newPercent){ return; }
