@@ -6,11 +6,11 @@ UPDATED
 	8/16/2013
 */
 
-(function($){
+(function bpExt($){
 	/* "GLOBAL" VARS */
 
 	//initialize variables.
-	var releaseVersion = '1.1.0', _lists = [], _cards = [], browser = {}, bp = {}, curBoard = '', firstVisit = false,
+	var releaseVersion = '1.1.1', _lists = [], _cards = [], browser = {}, bp = {}, curBoard = '', firstVisit = false,
 		injectedHTML = '<div class="ext-bp">'+
 			'<div class="bp-optionsIcon icon-sm icon-checklist bp-button"></div>'+
 				'<div class="bp-barContainer">'+
@@ -373,6 +373,9 @@ UPDATED
 						//count items toComplete?
 						if(bp.user.countCheckListsTowardsComplete){
 						//yes
+							toMax++; //count card as 1
+							if(inComplete){ toComplete++; } //if card is in complete list, count it.
+
 							//loop through each checklist item
 							for(var a = 0, aa = checklistItems.length; a < aa; a++){
 								//toMax + 1
