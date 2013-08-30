@@ -3,14 +3,14 @@ AUTHOR
 	Cycododge
 
 UPDATED
-	8/16/2013
+	8/30/2013
 */
 
 (function bpExt($){
 	/* "GLOBAL" VARS */
 
 	//initialize variables.
-	var releaseVersion = '1.1.1', _lists = [], _cards = [], browser = {}, bp = {}, curBoard = '', firstVisit = false,
+	var releaseVersion = '1.2.0', _lists = [], _cards = [], browser = {}, bp = {}, curBoard = '', firstVisit = false,
 		injectedHTML = '<div class="ext-bp">'+
 			'<div class="bp-optionsIcon icon-sm icon-checklist bp-button"></div>'+
 				'<div class="bp-barContainer">'+
@@ -19,7 +19,7 @@ UPDATED
 					'</div>'+
 				'</div>'+
 				'<div class="bp-settings">'+
-					'<div class="bp-column"><select class="bp-doneList"></select></div>'+
+					'<div class="bp-column"><div class="bp-title">Include</div><select class="bp-doneList" multiple size="3"></select></div>'+
 					'<div class="bp-column">'+
 						'<div class="bp-inputContainer">'+
 							'<span class="bp-title">Track:</span>'+
@@ -80,7 +80,7 @@ UPDATED
 				countCheckListsTowardsComplete:(typeof browser[curBoard].countCheckListsTowardsComplete == 'boolean' ? browser[curBoard].countCheckListsTowardsComplete : false)
 			},
 			sys:{ //default system settings
-				lastSelectedList:browser[curBoard].lastSelectedList || '', //id of the selected list
+				lastSelectedList:browser[curBoard].lastSelectedList || [], //id of the selected list
 				refreshTime:500, //how often to loop and re-check data (milliseconds)
 				lastMenuOpen:'', //if the right menu is open
 				settingsOpen:(typeof browser[curBoard].settingsOpen == 'boolean' ? browser[curBoard].settingsOpen : true), //if the settings are visible
@@ -164,8 +164,16 @@ UPDATED
 
 		//reload when the done list setting is changed
 		$('body').on('change','.ext-bp .bp-doneList',function(){
+			//reset the selected list
+			bp.sys.lastSelectedList = [];
+
+			//loop through selected lists
+			$.each($(this).find('option:selected'),function(i,v){
+				bp.sys.lastSelectedList.push(v.value); //save the input value
+			});
+
 			//save the newly selected list
-			bp.sys.lastSelectedList = $(this).find('option:selected').val(); //update in script
+			// bp.sys.lastSelectedList = $(this).find('option:selected').val(); //update in script
 			saveLocal('lastSelectedList',bp.sys.lastSelectedList); //save to the browser
 
 			//update the progress
@@ -256,7 +264,7 @@ UPDATED
 			$('.ext-bp').slideDown(continueLoad);
 		}else{ continueLoad(); }
 
-		//allows for inject animation to complete
+		//allows inject animation to complete
 		function continueLoad(){
 			//detect width changes
 			var curMenuOpen = !$('.board-wrapper').hasClass('disabled-all-widgets');
@@ -300,21 +308,22 @@ UPDATED
 		if(!nextDoneList.length){ return false; }
 
 		//if a selected list hasn't been specified
-		if(!bp.sys.lastSelectedList){
+		if(!bp.sys.lastSelectedList.length){
 			//loop through list of keywords to check titles against
 			for(var i = 0, ii = bp.backupKeywords.length; i < ii; i++){
 				//loop through each list title
 				for(var x = 0, xx = nextDoneList.length; x < xx; x++){
 					//if this keyword exists in this lists title
 					if(nextDoneList[x].title.toLowerCase().indexOf(bp.backupKeywords[i].toLowerCase()) >= 0){
-						bp.sys.lastSelectedList = nextDoneList[x].id; //set this list as selected
-						ii = xx = 0; //selection found, break out of all loops
+						bp.sys.lastSelectedList.push(nextDoneList[x].id); //add this list as selected
+						// bp.sys.lastSelectedList = nextDoneList[x].id; //set this list as selected
+						// ii = xx = 0; //selection found, break out of all loops
 					}
 				}
 			}
 
 			//set the first list as selected if still not set
-			if(!bp.sys.lastSelectedList){ bp.sys.lastSelectedList = nextDoneList[0].id; }
+			if(!bp.sys.lastSelectedList.length){ bp.sys.lastSelectedList.push(nextDoneList[0].id); }
 		}
 
 		//compare the nextDoneList with lastDoneList
@@ -325,7 +334,8 @@ UPDATED
 			//loop through nextDoneList
 			for(var n = 0, nn = nextDoneList.length; n < nn; n++){
 				//create the option lists AND set selected
-				listOptions.push('<option value="'+nextDoneList[n].id+'"'+(nextDoneList[n].id == bp.sys.lastSelectedList ? ' selected':'')+'>'+nextDoneList[n].title+'</option>');
+				listOptions.push('<option value="'+nextDoneList[n].id+'"'+(bp.sys.lastSelectedList.indexOf(nextDoneList[n].id) >= 0 ? ' selected':'')+'>'+nextDoneList[n].title+'</option>');
+				// listOptions.push('<option value="'+nextDoneList[n].id+'"'+(nextDoneList[n].id == bp.sys.lastSelectedList ? ' selected':'')+'>'+nextDoneList[n].title+'</option>');
 			}
 
 			//output the list to the page
@@ -362,7 +372,8 @@ UPDATED
 				var inComplete = false, toComplete = 0, toMax = 0;
 
 				//detect if in "complete" list
-				inComplete = (listID == bp.sys.lastSelectedList);
+				inComplete = (bp.sys.lastSelectedList.indexOf(listID) >= 0);
+				// inComplete = (listID == bp.sys.lastSelectedList);
 
 				//count checklists?
 				if(bp.user.countCheckLists){
