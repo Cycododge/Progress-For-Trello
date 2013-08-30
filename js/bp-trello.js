@@ -19,7 +19,7 @@ UPDATED
 					'</div>'+
 				'</div>'+
 				'<div class="bp-settings">'+
-					'<div class="bp-column"><div class="bp-title">Include</div><select class="bp-doneList" multiple size="3"></select></div>'+
+					'<div class="bp-column"><div class="bp-title">Track Against</div><select class="bp-doneList" multiple size="3"></select></div>'+
 					'<div class="bp-column">'+
 						'<div class="bp-inputContainer">'+
 							'<span class="bp-title">Track:</span>'+
@@ -69,7 +69,9 @@ UPDATED
 		return {
 			math:{
 				progressMax:0,
-				progressComplete:0
+				progressComplete:0,
+				lastPercentage:0, //percentage before last change
+				nextPercentage:0 //percentage after last change
 			},
 			user:{ //default user settings
 				//count scrum points instead of cards/checklists
@@ -462,12 +464,37 @@ UPDATED
 		newPercent = Math.floor((bp.math.progressComplete / bp.math.progressMax) * 100);
 
 		//don't update if nothing changed from last time
-		if(bp.percentageComplete == newPercent){ return; }
+		if(bp.math.nextPercentage == newPercent){ return; }
 
 		//update the global var
-		bp.percentageComplete = newPercent;
+		bp.math.nextPercentage = newPercent;
 
-		//adjust the progress bar
-		$('.bp-progress').animate({width:bp.percentageComplete+'%'}).find('.bp-pc').text(bp.percentageComplete+'%');
+		//adjust the progress bar width
+		var animateSpeed = 400;
+		$('.bp-progress').animate({width:bp.math.nextPercentage+'%'},animateSpeed);
+
+		//determine how to add/remove to the text
+		var diff = (bp.math.nextPercentage - bp.math.lastPercentage).toFixed(0);
+
+		//change the text over the course of animateSpeed
+		var numLoops = 0;
+		var animate = setInterval(function(){
+			numLoops++;
+
+			//update the percentage text
+			$('.bp-progress .bp-pc').text((bp.math.lastPercentage += (diff > 0 ? 1:-1))+'%');
+
+			//determine if text should be updated again
+			if(numLoops >= Math.abs(diff)){
+				//reset last percentage to the new one
+				bp.math.lastPercentage = bp.math.nextPercentage;
+
+				//final correct output of percentage (accounting for rounding errors)
+				$('.bp-progress .bp-pc').text(bp.math.nextPercentage+'%');
+
+				//stop looping
+				clearInterval(animate);
+			}
+		},Math.abs((animateSpeed/2) / diff));
 	}
 })(jQuery);
