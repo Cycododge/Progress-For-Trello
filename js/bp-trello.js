@@ -453,6 +453,9 @@ UPDATED
 
 	//update the progress bar
 	function updateProgress(){
+		var newPercent = 0, //default
+			animateSpeed = 400;
+
 		//if total is 0, show 100% completion
 		if(!bp.math.progressMax){
 			bp.math.progressComplete = 1;
@@ -460,7 +463,6 @@ UPDATED
 		}
 
 		//determine new percentage
-		var newPercent = 0;
 		newPercent = Math.floor((bp.math.progressComplete / bp.math.progressMax) * 100);
 
 		//don't update if nothing changed from last time
@@ -470,31 +472,27 @@ UPDATED
 		bp.math.nextPercentage = newPercent;
 
 		//adjust the progress bar width
-		var animateSpeed = 400;
 		$('.bp-progress').animate({width:bp.math.nextPercentage+'%'},animateSpeed);
 
 		//determine how to add/remove to the text
 		var diff = (bp.math.nextPercentage - bp.math.lastPercentage).toFixed(0);
 
 		//change the text over the course of animateSpeed
-		var numLoops = 0;
+		var numLoops = 0, stepLength = 25;
 		var animate = setInterval(function(){
-			numLoops++;
+			numLoops += stepLength;
 
 			//update the percentage text
-			$('.bp-progress .bp-pc').text((bp.math.lastPercentage += (diff > 0 ? 1:-1))+'%');
+			$('.bp-progress .bp-pc').text(Math.floor(Math.abs(bp.math.lastPercentage += (diff/(animateSpeed/stepLength))))+'%');
 
 			//determine if text should be updated again
-			if(numLoops >= Math.abs(diff)){
+			if(numLoops >= animateSpeed){
 				//reset last percentage to the new one
 				bp.math.lastPercentage = bp.math.nextPercentage;
-
-				//final correct output of percentage (accounting for rounding errors)
-				$('.bp-progress .bp-pc').text(bp.math.nextPercentage+'%');
 
 				//stop looping
 				clearInterval(animate);
 			}
-		},Math.abs((animateSpeed/2) / diff));
+		},stepLength);
 	}
 })(jQuery);
