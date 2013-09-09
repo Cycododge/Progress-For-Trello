@@ -3,14 +3,14 @@ AUTHOR
 	Cycododge
 
 UPDATED
-	8/30/2013
+	9/9/2013
 */
 
 (function bpExt($){
 	/* "GLOBAL" VARS */
 
 	//initialize variables.
-	var releaseVersion = '1.2.0', _lists = [], _cards = [], browser = {}, bp = {}, curBoard = '', firstVisit = false,
+	var releaseVersion = '1.2.1', _lists = [], _cards = [], browser = {}, bp = {}, curBoard = '', firstVisit = false,
 		injectedHTML = '<div class="ext-bp">'+
 			'<div class="bp-optionsIcon icon-sm icon-checklist bp-button"></div>'+
 				'<div class="bp-barContainer">'+
@@ -468,14 +468,14 @@ UPDATED
 		//don't update if nothing changed from last time
 		if(bp.math.nextPercentage == newPercent){ return; }
 
-		//update the global var
+		//update the global var for next check
 		bp.math.nextPercentage = newPercent;
 
 		//adjust the progress bar width
-		$('.bp-progress').animate({width:bp.math.nextPercentage+'%'},animateSpeed);
+		$('.bp-progress').animate({width:newPercent+'%'},animateSpeed);
 
 		//determine how to add/remove to the text
-		var diff = (bp.math.nextPercentage - bp.math.lastPercentage).toFixed(0);
+		var diff = (newPercent - bp.math.lastPercentage).toFixed(0);
 
 		//change the text over the course of animateSpeed
 		var numLoops = 0, stepLength = 25;
@@ -488,10 +488,13 @@ UPDATED
 			//determine if text should be updated again
 			if(numLoops >= animateSpeed){
 				//reset last percentage to the new one
-				bp.math.lastPercentage = bp.math.nextPercentage;
+				bp.math.lastPercentage = newPercent;
 
 				//stop looping
 				clearInterval(animate);
+
+				//output the final percentage (accounts for any errors)
+				$('.bp-progress .bp-pc').text(newPercent+'%');
 			}
 		},stepLength);
 	}
