@@ -8,7 +8,7 @@ Track the overall completion of your Trello-based project with this Chrome exten
 - Choose multiple lists to track progress on
 - Option to track checklists
 	- Option to track completed items
-- Option to track scrum points
+- Option to track scrum points *
 - Per board settings
 - Pre-selects lists based on title
 	- 'done'
@@ -16,6 +16,10 @@ Track the overall completion of your Trello-based project with this Chrome exten
 	- 'complete'
 	- 'finished'
 	- 'closed'
+
+* Supported Point Formats
+	"Card Title (1.5)" //will count 1.5 points
+		- (Scrum For Trello)[https://chrome.google.com/webstore/detail/scrum-for-trello/jdbcdblgjdpmfninkoogcfpnkjmndgje]
 
 
 ## Chrome Store Install
