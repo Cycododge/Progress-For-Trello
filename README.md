@@ -1,4 +1,4 @@
-# Progress for Trello v1.2.1
+# Progress for Trello v1.2.2
 
 Track the overall completion of your Trello-based project with this Chrome extension, by counting cards or scrum points.
 
@@ -44,6 +44,11 @@ This plug-in directly injects code into the Trello page in order to quickly and 
 
 ## Release Notes
 
+v1.2.2 - 1/14/2013
+
+- Updated to work with the new version of Trello
+
+
 v1.2.1 - 9/9/2013
 
 - Update percentage again after animation
@@ -68,7 +73,3 @@ v1.1.0 - 8/16/2013
 
 
 ![Screenshot](https://raw.github.com/Cycododge/Progress-For-Trello/master/resources/doneCardsCompleted.png)
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Cycododge/Progress-For-Trello/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-

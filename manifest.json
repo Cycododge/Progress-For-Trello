@@ -1,6 +1,6 @@
 {
 	"name": "Progress for Trello",
-	"version": "1.2.1",
+	"version": "1.2.2",
 	"manifest_version": 2,
 	"description": "Track the overall completion of your Trello-based project by counting cards, scrum points, and checklists.",
 	"homepage_url": "http://cycododge.com/projects#progress",

@@ -4,7 +4,7 @@
 
 /* PROGRESS */
 .ext-bp .bp-barContainer { display: inline-block; box-shadow: 0 1px 3px #000 inset, 0 1px 0 #444; background-color: #ddd; border: 1px solid #000; border-radius: 5px; margin-bottom: 6px; width: 96%; }
-.ext-bp .bp-progress { width: 0; background-color: #27709b;  border-radius: 3px; box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset; }
+.ext-bp .bp-progress { width: 0; background-color: #606A70;/* background-color: #27709b; */  border-radius: 3px; box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset; }
 .ext-bp .bp-pc { cursor: default; display: inline-block; margin: 1px 0 0 5px; color: #fff; text-shadow: 2px 2px 2px #000; }
 
 /* SETTINGS */
@@ -17,7 +17,7 @@
 .ext-bp .bp-saveSettings { padding: 1px 4px; position: absolute; right: 10px; bottom: 5px; }
 .ext-bp .bp-column { display:inline-block; vertical-align: top; }
 .ext-bp .bp-inputContainer { margin-top: 2px; }
-.ext-bp .bp-version { position: absolute; top: -5px; right: 10px; font-size: 65%; color: #777; }
+.ext-bp .bp-version { position: absolute; top:0; right: 10px; font-size: 65%; color: #777; }
 .ext-bp .bp-settings select, .ext-bp .bp-settings input { cursor: pointer; }
 .ext-bp .bp-settings input { min-height: 0; }
 .ext-bp .bp-settings input[type="radio"] { margin-left: 5px; }

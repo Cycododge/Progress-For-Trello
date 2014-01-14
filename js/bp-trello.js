@@ -10,7 +10,7 @@ UPDATED
 	/* "GLOBAL" VARS */
 
 	//initialize variables.
-	var releaseVersion = '1.2.1', _lists = [], _cards = [], browser = {}, bp = {}, curBoard = '', firstVisit = false,
+	var releaseVersion = '1.2.2', _lists = [], _cards = [], browser = {}, bp = {}, curBoard = '', firstVisit = false,
 		injectedHTML = '<div class="ext-bp">'+
 			'<div class="bp-optionsIcon icon-sm icon-checklist bp-button"></div>'+
 				'<div class="bp-barContainer">'+
@@ -213,14 +213,9 @@ UPDATED
 
 	//get the board data
 	function getBoard(){
-		//grab the first card and return the board
-		for(var cardID in ModelCache._cache.Card){
-			if(!ModelCache._cache.Card.hasOwnProperty(cardID)){ continue; }
-			return ModelCache._cache.Card[cardID].getBoard(); //send back the board
-		}
-
-		//if the function made it here, the board was not retrieved.
-		return '';
+		var curShortLink = window.location.pathname.split('/')[2];
+		//get the current board id from the shortLink in the url
+		return { id:(IdCache.getBoardId(curShortLink) || IdCache.getBoardIdForCard(curShortLink)) };
 	}
 
 	//save the settings back to the browser
@@ -250,7 +245,7 @@ UPDATED
 
 		//if the UI doesn't exist
 		if(!document.getElementsByClassName('ext-bp').length){
-			$('#board-header').after(injectedHTML); //add html to the page
+			$('.board-header').after(injectedHTML); //add html to the page
 
 			/* CREATE THE INITIAL SETTINGS */
 			//determine tracking
@@ -278,7 +273,7 @@ UPDATED
 				var newWidth = $('#header').width() - 30;
 				if(curMenuOpen){
 					//set width to header
-					newWidth = $('#board-header').width();
+					newWidth = $('.board-header').width();
 				}
 
 				//set the UI width
@@ -352,8 +347,8 @@ UPDATED
 		//reset
 		bp.math.progressMax = 0;
 		bp.math.progressComplete = 0;
-		_lists = ModelCache._cache.List;
-		_cards = ModelCache._cache.Card;
+		_lists = ModelCacheCache._caches['board_'+getBoard().id]._cache.List;
+		_cards = ModelCacheCache._caches['board_'+getBoard().id]._cache.Card;
 
 		//try updating the drop down. If there are no lists, try again (with buffer).
 		if(!updateDoneOptions(_lists)){ setTimeout(loadData,100); return; }
