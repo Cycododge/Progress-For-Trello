@@ -3,14 +3,14 @@ AUTHOR
 	Cycododge
 
 UPDATED
-	9/9/2013
+	2/23/2015
 */
 
 (function bpExt($){
 	/* "GLOBAL" VARS */
 
 	//initialize variables.
-	var releaseVersion = '1.2.2', _lists = [], _cards = [], browser = {}, bp = {}, curBoard = '', firstVisit = false,
+	var releaseVersion = '1.2.3', _lists = [], _cards = [], browser = {}, bp = {}, curBoard = '', firstVisit = false,
 		injectedHTML = '<div class="ext-bp">'+
 			'<div class="bp-optionsIcon icon-sm icon-checklist bp-button"></div>'+
 				'<div class="bp-barContainer">'+
