@@ -363,7 +363,6 @@ UPDATED
 				if(!_cards.hasOwnProperty(cardID)){ continue; } //skip if not a card
 				if(_cards[cardID].attributes.closed){ continue; } //skip if the card is closed
 				if(_cards[cardID].attributes.idList != listID){ continue; } //skip if the card doesn't belong to this list
-				if(_cards[cardID].view.el.className.indexOf('hide') >= 0){ continue; } //skip if hidden
 
 				//track card worth and location
 				var inComplete = false, toComplete = 0, toMax = 0;
