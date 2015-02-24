@@ -47,6 +47,7 @@ This plug-in directly injects code into the Trello page in order to quickly and 
 v1.2.3 - 1/14/2015
 
 - Updated again to work with Trello updates.
+- Fix for progress bar width
 
 
 v1.2.2 - 1/14/2013
