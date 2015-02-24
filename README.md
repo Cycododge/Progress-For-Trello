@@ -1,4 +1,4 @@
-# Progress for Trello v1.2.2
+# Progress for Trello v1.2.3
 
 Track the overall completion of your Trello-based project with this Chrome extension, by counting cards or scrum points.
 
