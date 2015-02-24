@@ -44,6 +44,11 @@ This plug-in directly injects code into the Trello page in order to quickly and 
 
 ## Release Notes
 
+v1.2.3 - 1/14/2015
+
+- Updated again to work with Trello updates.
+
+
 v1.2.2 - 1/14/2013
 
 - Updated to work with the new version of Trello
