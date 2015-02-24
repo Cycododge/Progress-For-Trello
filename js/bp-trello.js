@@ -184,7 +184,7 @@ UPDATED
 
 		//listen for the window to be resized and update bar width
 		$(window).on('resize',function(){
-			$('.ext-bp .bp-barContainer,.ext-bp .bp-settings').animate({width:$('#header').width()-30});
+			$('.ext-bp .bp-barContainer,.ext-bp .bp-settings').animate({ width: window.innerWidth - 40 });
 		});
 
 		//open/close settings
@@ -270,10 +270,10 @@ UPDATED
 				bp.sys.lastMenuOpen = curMenuOpen;
 
 				//if menu open
-				var newWidth = $('#header').width() - 30;
+				var newWidth = window.innerWidth - 40;
 				if(curMenuOpen){
 					//set width to header
-					newWidth = $('.board-header').width();
+					// newWidth = $('.board-header').width();
 				}
 
 				//set the UI width
