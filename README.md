@@ -47,6 +47,7 @@ This plug-in directly injects code into the Trello page in order to quickly and 
 v1.2.4 - 10/25/2016
 
 - Changes for Trello updates thanks for [@acoppes](https://github.com/acoppes)
+- show 5 list items instead of 3
 
 
 v1.2.3 - 2/23/2015
