@@ -48,6 +48,7 @@ v1.2.4 - 10/25/2016
 
 - Changes for Trello updates thanks for [@acoppes](https://github.com/acoppes)
 - show 5 list items instead of 3
+- change the icon for the settings button
 
 
 v1.2.3 - 2/23/2015

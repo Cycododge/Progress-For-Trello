@@ -12,7 +12,7 @@ UPDATED
 	//initialize variables.
 	var releaseVersion = '1.2.4', _lists = [], _cards = [], browser = {}, bp = {}, curBoard = '', firstVisit = false,
 		injectedHTML = '<div class="ext-bp">'+
-			'<div class="bp-optionsIcon icon-sm icon-checklist bp-button"></div>'+
+			'<div class="bp-optionsIcon icon-sm icon-description bp-button"></div>'+
 				'<div class="bp-barContainer">'+
 					'<div class="bp-progress" style="width:0%;">'+
 						'<span class="bp-pc">0%</span>'+
