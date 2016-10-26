@@ -19,7 +19,7 @@ UPDATED
 					'</div>'+
 				'</div>'+
 				'<div class="bp-settings">'+
-					'<div class="bp-column"><div class="bp-title">Track Against</div><select class="bp-doneList" multiple size="3"></select></div>'+
+					'<div class="bp-column"><div class="bp-title">Track Against</div><select class="bp-doneList" multiple size="5"></select></div>'+
 					'<div class="bp-column">'+
 						'<div class="bp-inputContainer">'+
 							'<span class="bp-title">Track:</span>'+
