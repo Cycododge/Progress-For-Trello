@@ -215,7 +215,7 @@ UPDATED
 	function getBoard(){
 		var curShortLink = window.location.pathname.split('/')[2];
 		//get the current board id from the shortLink in the url
-		return { id:(IdCache.getBoardId(curShortLink) || IdCache.getBoardIdForCard(curShortLink)) };
+		return { id: (IdCache.getBoardId(curShortLink) || IdCache._shortLinkToId.Board[curShortLink]) };
 	}
 
 	//save the settings back to the browser
