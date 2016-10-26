@@ -3,14 +3,14 @@ AUTHOR
 	Cycododge
 
 UPDATED
-	2/23/2015
+	10/25/2016
 */
 
 (function bpExt($){
 	/* "GLOBAL" VARS */
 
 	//initialize variables.
-	var releaseVersion = '1.2.3', _lists = [], _cards = [], browser = {}, bp = {}, curBoard = '', firstVisit = false,
+	var releaseVersion = '1.2.4', _lists = [], _cards = [], browser = {}, bp = {}, curBoard = '', firstVisit = false,
 		injectedHTML = '<div class="ext-bp">'+
 			'<div class="bp-optionsIcon icon-sm icon-checklist bp-button"></div>'+
 				'<div class="bp-barContainer">'+
@@ -347,8 +347,11 @@ UPDATED
 		//reset
 		bp.math.progressMax = 0;
 		bp.math.progressComplete = 0;
-		_lists = ModelCacheCache._caches['board_'+getBoard().id]._cache.List;
-		_cards = ModelCacheCache._caches['board_'+getBoard().id]._cache.Card;
+
+		//config
+		var boardId = 'board_' + getBoard().id;
+		_lists = window.ModelCache._cache.List;
+		_cards = window.ModelCache._cache.Card;
 
 		//try updating the drop down. If there are no lists, try again (with buffer).
 		if(!updateDoneOptions(_lists)){ setTimeout(loadData,100); return; }
@@ -364,18 +367,25 @@ UPDATED
 				if(_cards[cardID].attributes.closed){ continue; } //skip if the card is closed
 				if(_cards[cardID].attributes.idList != listID){ continue; } //skip if the card doesn't belong to this list
 
+				//cache
+				var currentCard = _cards[cardID];
+
 				//track card worth and location
 				var inComplete = false, toComplete = 0, toMax = 0;
 
 				//detect if in "complete" list
 				inComplete = (bp.sys.lastSelectedList.indexOf(listID) >= 0);
-				// inComplete = (listID == bp.sys.lastSelectedList);
 
 				//count checklists?
 				if(bp.user.countCheckLists){
 					//loop through each checklist for this card
-					for(var i = 0, ii = _cards[cardID].checklistList.length; i < ii; i++){
-						var checklistItems = _cards[cardID].checklistList.models[i].attributes.checkItems; //cache
+					for(var i = 0, ii = currentCard.checklistList.length; i < ii; i++){
+						var checklistItems = currentCard.checklistList.models[i].attributes.checkItems; //cache
+
+						//skip if there are no items
+						if(!checklistItems){
+							continue;
+						}
 
 						//count items toComplete?
 						if(bp.user.countCheckListsTowardsComplete){
