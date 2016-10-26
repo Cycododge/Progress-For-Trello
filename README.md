@@ -1,4 +1,4 @@
-# Progress for Trello v1.2.3
+# Progress for Trello v1.2.4
 
 Track the overall completion of your Trello-based project with this Chrome extension, by counting cards or scrum points.
 
@@ -43,6 +43,11 @@ This plug-in directly injects code into the Trello page in order to quickly and 
 
 
 ## Release Notes
+
+v1.2.4 - 10/25/2016
+
+- Changes for Trello updates thanks for [@acoppes](https://github.com/acoppes)
+
 
 v1.2.3 - 2/23/2015
 
