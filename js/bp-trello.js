@@ -1,35 +1,44 @@
+/*jshint esversion: 6 */
+
 (function bpExt($){
-	/* "GLOBAL" VARS */
+	'use strict';
 
 	//initialize variables.
-	var _lists = [], _cards = [], browser = {}, bp = {}, curBoard = '', firstVisit = false,
-		injectedHTML = '<div class="ext-bp">'+
-			'<div class="bp-optionsIcon icon-sm icon-description bp-button"></div>'+
-				'<div class="bp-barContainer">'+
-					'<div class="bp-progress" style="width:0%;">'+
-						'<span class="bp-pc">0%</span>'+
-					'</div>'+
-				'</div>'+
-				'<div class="bp-settings">'+
-					'<div class="bp-column"><div class="bp-title">Track Against</div><select class="bp-doneList" multiple size="5"></select></div>'+
-					'<div class="bp-column">'+
-						'<div class="bp-inputContainer">'+
-							'<span class="bp-title">Track:</span>'+
-							'<label for="bp-cards">Cards</label>'+
-							'<input value="false" name="bp-tracking" data-setting="tracking" id="bp-cards" type="radio" />'+
-							'<label for="bp-points">Points</label>'+
-							'<input value="true" name="bp-tracking" data-setting="tracking" id="bp-points" type="radio" />'+
-						'</div>'+
-						'<div class="bp-inputContainer">'+
-							'<input data-setting="countCheckLists" class="bp-indent" type="checkbox" />Track Checklists'+
-						'</div>'+
-						'<div class="bp-inputContainer countCheckListsTowardsComplete">'+
-							'<input data-setting="countCheckListsTowardsComplete" class="bp-indentLevel2" type="checkbox" />Track Completed Items'+
-						'</div>'+
-					'</div>'+
-					'<div class="bp-saveSettings bp-button">Close</div>'+
-				'</div>'+
-			'</div>';
+	var _lists = [],
+		_cards = [],
+		browser = {},
+		bp = {},
+		curBoard = '',
+		firstVisit = false,
+		injectedHTML = `
+			<div class="ext-bp">
+				<div class="bp-optionsIcon icon-sm icon-description bp-button"></div>
+				<div class="bp-barContainer">
+					<div class="bp-progress" style="width:0%;">
+						<span class="bp-pc">0%</span>
+					</div>
+				</div>
+				<div class="bp-settings">
+					<div class="bp-column"><div class="bp-title">Track Against</div><select class="bp-doneList" multiple size="5"></select></div>
+					<div class="bp-column">
+						<div class="bp-inputContainer">
+							<span class="bp-title">Track:</span>
+							<label for="bp-cards">Cards</label>
+							<input value="false" name="bp-tracking" data-setting="tracking" id="bp-cards" type="radio" />
+							<label for="bp-points">Points</label>
+							<input value="true" name="bp-tracking" data-setting="tracking" id="bp-points" type="radio" />
+						</div>
+						<div class="bp-inputContainer">
+							<input data-setting="countCheckLists" class="bp-indent" type="checkbox" />Track Checklists
+						</div>
+						<div class="bp-inputContainer countCheckListsTowardsComplete">
+							<input data-setting="countCheckListsTowardsComplete" class="bp-indentLevel2" type="checkbox" />Track Completed Items
+						</div>
+					</div>
+					<div class="bp-saveSettings bp-button">Close</div>
+				</div>
+			</div>
+		`;
 
 	//get the current board, then fire the script
 	var curBoardInterval = setInterval(function(){
