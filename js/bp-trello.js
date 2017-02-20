@@ -1,11 +1,3 @@
-/*
-AUTHOR
-	Cycododge
-
-UPDATED
-	10/25/2016
-*/
-
 (function bpExt($){
 	/* "GLOBAL" VARS */
 
