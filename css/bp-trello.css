@@ -16,7 +16,6 @@
 .ext-bp .bp-saveSettings { padding: 1px 4px; position: absolute; right: 10px; bottom: 5px; }
 .ext-bp .bp-column { display:inline-block; vertical-align: top; }
 .ext-bp .bp-inputContainer { margin-top: 2px; }
-.ext-bp .bp-version { position: absolute; top:0; right: 10px; font-size: 65%; color: #777; }
 .ext-bp .bp-settings select, .ext-bp .bp-settings input { cursor: pointer; }
 .ext-bp .bp-settings input { min-height: 0; }
 .ext-bp .bp-settings input[type="radio"] { margin-left: 5px; }

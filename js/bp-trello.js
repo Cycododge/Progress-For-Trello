@@ -2,7 +2,7 @@
 	/* "GLOBAL" VARS */
 
 	//initialize variables.
-	var releaseVersion = '1.2.5', _lists = [], _cards = [], browser = {}, bp = {}, curBoard = '', firstVisit = false,
+	var _lists = [], _cards = [], browser = {}, bp = {}, curBoard = '', firstVisit = false,
 		injectedHTML = '<div class="ext-bp">'+
 			'<div class="bp-optionsIcon icon-sm icon-description bp-button"></div>'+
 				'<div class="bp-barContainer">'+
@@ -27,7 +27,6 @@
 							'<input data-setting="countCheckListsTowardsComplete" class="bp-indentLevel2" type="checkbox" />Track Completed Items'+
 						'</div>'+
 					'</div>'+
-					'<div class="bp-version">v'+releaseVersion+'</div>'+
 					'<div class="bp-saveSettings bp-button">Close</div>'+
 				'</div>'+
 			'</div>';
