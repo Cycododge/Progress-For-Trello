@@ -41,49 +41,4 @@ Be a part of the progress [here](https://trello.com/b/0QkitWlZ/progress-for-trel
 
 This plug-in directly injects code into the Trello page in order to quickly and easily monitor changes to your boards.
 
-
-## Release Notes
-
-v1.2.4 - 10/25/2016
-
-- Changes for Trello updates thanks to [@acoppes](https://github.com/acoppes)
-- show 5 list items instead of 3
-- change the icon for the settings button
-- fix an error when viewing a card
-
-
-v1.2.3 - 2/23/2015
-
-- Updated again to work with Trello updates.
-- Fix for progress bar width
-
-
-v1.2.2 - 1/14/2013
-
-- Updated to work with the new version of Trello
-
-
-v1.2.1 - 9/9/2013
-
-- Update percentage again after animation
-
-
-v1.2.0 - 8/31/2013
-
-- Percentage now calculated by rounding down
-- Animated percentage changes
-- Can now track against multiple lists
-- Counting completed checklist items, now tracks card too.
-- Fixed display for settings
-
-
-v1.1.0 - 8/16/2013
-
-- Add version number to settings menu
-- track scrum points
-- track checklist items
-- separate settings menu from the header
-- UI/UX Changes
-
-
 ![Screenshot](https://raw.github.com/Cycododge/Progress-For-Trello/master/resources/doneCardsCompleted.png)
